@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Service_ApiGateway</RootNamespace>
+    <UserSecretsId>da5a49cc-d2e9-42f6-8a83-9f1545fa29b0</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
