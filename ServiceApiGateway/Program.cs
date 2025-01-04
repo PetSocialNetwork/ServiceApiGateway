@@ -1,9 +1,15 @@
 using Microsoft.OpenApi.Models;
 using Service_ApiGateway.Extensions;
+using Service_ApiGateway.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<CentralizedExceptionHandlingFilter>();
+});
+
 builder.Services.AddClientServices();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -25,6 +31,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
+
+app.UseCors(policy =>
+{
+    policy
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowAnyOrigin();
+});
 
 if (app.Environment.IsDevelopment())
 {

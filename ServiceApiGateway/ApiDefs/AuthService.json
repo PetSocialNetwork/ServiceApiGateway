@@ -258,14 +258,14 @@
       },
       "ResetPasswordRequest": {
         "required": [
-          "accountId",
+          "email",
           "newPassword"
         ],
         "type": "object",
         "properties": {
-          "accountId": {
-            "type": "string",
-            "format": "uuid"
+          "email": {
+            "minLength": 1,
+            "type": "string"
           },
           "newPassword": {
             "minLength": 1,

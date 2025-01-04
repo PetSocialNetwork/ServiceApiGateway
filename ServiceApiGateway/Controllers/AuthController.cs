@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServiceAuth;
+using System.Net;
 
 namespace Service_ApiGateway.Controllers
 {
@@ -20,7 +21,14 @@ namespace Service_ApiGateway.Controllers
         public async Task<ActionResult<RegisterResponse>> Register
             (RegisterRequest request, CancellationToken cancellationToken)
         {
-            return await _authClient.RegisterAsync(request, cancellationToken);
+            try
+            {
+                return await _authClient.RegisterAsync(request, cancellationToken);
+            }
+            catch (ApiException ex)
+            {                
+                return BadRequest(ex.Response);
+            }
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]

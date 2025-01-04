@@ -9,6 +9,7 @@
             services.AddServiceClient<PetSocialNetwork.ServiceComments.ICommentClient, PetSocialNetwork.ServiceComments.CommentClient>("CommentService");
             services.AddServiceClient<PetSocialNetwork.ServiceNotification.INotificationClient, PetSocialNetwork.ServiceNotification.NotificationClient>("NotificationService");
             services.AddServiceClient<PetSocialNetwork.ServiceUser.IUserProfileClient, PetSocialNetwork.ServiceUser.UserProfileClient>("UserService");
+            services.AddServiceClient<PetSocialNetwork.ServicePet.IPetProfileClient, PetSocialNetwork.ServicePet.PetProfileClient>("PetService");
 
             return services;
         }
