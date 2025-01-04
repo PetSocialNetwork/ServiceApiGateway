@@ -35,20 +35,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "string",
-                  "format": "uuid"
+                  "$ref": "#/components/schemas/PetProfileResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "uuid"
+                  "$ref": "#/components/schemas/PetProfileResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "uuid"
+                  "$ref": "#/components/schemas/PetProfileResponse"
                 }
               }
             }
@@ -214,10 +211,10 @@
       "AddPetProfileRequest": {
         "required": [
           "accountId",
+          "age",
           "gender",
           "name",
-          "type",
-          "years"
+          "type"
         ],
         "type": "object",
         "properties": {
@@ -237,7 +234,7 @@
             "minLength": 1,
             "type": "string"
           },
-          "years": {
+          "age": {
             "type": "integer",
             "format": "int32"
           },
@@ -251,11 +248,11 @@
       "PetProfileResponse": {
         "required": [
           "accountId",
+          "age",
           "gender",
           "id",
           "name",
-          "type",
-          "years"
+          "type"
         ],
         "type": "object",
         "properties": {
@@ -279,7 +276,7 @@
             "minLength": 1,
             "type": "string"
           },
-          "years": {
+          "age": {
             "type": "integer",
             "format": "int32"
           },
@@ -293,11 +290,11 @@
       "UpdatePetProfileRequest": {
         "required": [
           "accountId",
+          "age",
           "gender",
           "id",
           "name",
-          "type",
-          "years"
+          "type"
         ],
         "type": "object",
         "properties": {
@@ -321,7 +318,7 @@
             "minLength": 1,
             "type": "string"
           },
-          "years": {
+          "age": {
             "type": "integer",
             "format": "int32"
           },

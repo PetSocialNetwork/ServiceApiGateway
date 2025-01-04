@@ -17,7 +17,7 @@ namespace Service_ApiGateway.Controllers
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileWithAccountAlreadyExistsException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
-        public async Task<Guid> AddPetProfileAsync([FromBody] AddPetProfileRequest request, CancellationToken cancellationToken)
+        public async Task<PetProfileResponse> AddPetProfileAsync([FromBody] AddPetProfileRequest request, CancellationToken cancellationToken)
         {
             return await _petProfileClient.AddPetProfileAsync(request, cancellationToken);
         }
