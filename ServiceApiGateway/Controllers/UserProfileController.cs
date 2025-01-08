@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServiceUser;
 
 namespace Service_ApiGateway.Controllers
@@ -22,6 +23,14 @@ namespace Service_ApiGateway.Controllers
             return await _userProfileClient.GetUserProfileByIdAsync(id, cancellationToken);
         }
 
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpGet("[action]")]
+        public async Task<UserProfileResponse> GetUserProfileByAccountIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
+        {
+            return  await _userProfileClient.GetUserProfileByAccountIdAsync(id, cancellationToken);
+        }
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]

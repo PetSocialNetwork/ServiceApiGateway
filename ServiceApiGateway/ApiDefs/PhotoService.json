@@ -1,0 +1,649 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ServicePhoto.WebApi",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/PersonalPhoto/AddAndSetPersonalPhoto": {
+      "post": {
+        "tags": [
+          "PersonalPhoto"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonalPhotoRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonalPhotoRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonalPhotoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PersonalPhoto/AddPersonalPhoto": {
+      "post": {
+        "tags": [
+          "PersonalPhoto"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonalPhotoRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonalPhotoRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonalPhotoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PersonalPhoto/BySearchPersonalPhotos": {
+      "get": {
+        "tags": [
+          "PersonalPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PersonalPhotoResponse"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PersonalPhotoResponse"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PersonalPhotoResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PersonalPhoto/GetPersonalPhotoById": {
+      "get": {
+        "tags": [
+          "PersonalPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PersonalPhoto/GetMainPersonalPhoto": {
+      "get": {
+        "tags": [
+          "PersonalPhoto"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PersonalPhoto/DeletePersonalPhoto": {
+      "delete": {
+        "tags": [
+          "PersonalPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "photoId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PersonalPhoto/SetMainPersonalPhoto": {
+      "get": {
+        "tags": [
+          "PersonalPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "photoId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PetPhoto/AddAndSetPetPhoto": {
+      "post": {
+        "tags": [
+          "PetPhoto"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PetPhotoRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PetPhotoRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PetPhotoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PetPhoto/AddPetPhoto": {
+      "post": {
+        "tags": [
+          "PetPhoto"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PetPhotoRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PetPhotoRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PetPhotoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PetPhoto/BySearchPetPhotos": {
+      "get": {
+        "tags": [
+          "PetPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PetPhotoReponse"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PetPhotoReponse"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PetPhotoReponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PetPhoto/GetPetPhotoById": {
+      "get": {
+        "tags": [
+          "PetPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PetPhoto/GetMainPetPhoto": {
+      "get": {
+        "tags": [
+          "PetPhoto"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PetPhoto/DeletePetPhoto": {
+      "delete": {
+        "tags": [
+          "PetPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "photoId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PetPhoto/SetMainPetPhoto": {
+      "get": {
+        "tags": [
+          "PetPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "photoId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PersonalPhotoRequest": {
+        "required": [
+          "accountId",
+          "path"
+        ],
+        "type": "object",
+        "properties": {
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PersonalPhotoResponse": {
+        "required": [
+          "accountId",
+          "id",
+          "isMainPersonalPhoto",
+          "path"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "isMainPersonalPhoto": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PetPhotoReponse": {
+        "required": [
+          "accountId",
+          "id",
+          "isMainPetPhoto",
+          "path"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "isMainPetPhoto": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PetPhotoRequest": {
+        "required": [
+          "accountId",
+          "path"
+        ],
+        "type": "object",
+        "properties": {
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
