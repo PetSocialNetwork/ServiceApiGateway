@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServiceAuth;
-using System.Net;
 
 namespace Service_ApiGateway.Controllers
 {

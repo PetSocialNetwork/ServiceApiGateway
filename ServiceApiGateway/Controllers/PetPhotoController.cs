@@ -18,17 +18,33 @@ namespace Service_ApiGateway.Controllers
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PhotoNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
-        public async Task<PetPhotoReponse> AddAndSetPetPhotoAsync(PetPhotoRequest request, CancellationToken cancellationToken)
+        [Consumes("multipart/form-data")]
+        public async Task<PetPhotoReponse> AddAndSetPetPhotoAsync(IFormFile file, [FromForm]Guid accountId, CancellationToken cancellationToken)
         {
-            return await _petPhotoCleint.AddAndSetPetPhotoAsync(request, cancellationToken);
+            await using var fileStream = file.OpenReadStream();
+
+            var p = new FileParameter(fileStream, "тестовое имя.jpg", file.ContentType);
+            return await _petPhotoCleint.AddAndSetPetPhotoAsync(p, accountId, cancellationToken);
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
-        public async Task<PetPhotoReponse> AddPetPhotoAsync(PetPhotoRequest request, CancellationToken cancellationToken)
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult<PetPhotoReponse>> AddPetPhotoAsync(IFormFile file, [FromForm] Guid accountId, CancellationToken cancellationToken)
         {
-            return await _petPhotoCleint.AddPetPhotoAsync(request, cancellationToken);
+         
+            try
+            {
+                await using var fileStream = file.OpenReadStream();
+
+                var p = new FileParameter(fileStream, "тестовое имя", file.ContentType);
+                return await _petPhotoCleint.AddPetPhotoAsync(p, accountId, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
@@ -53,9 +69,9 @@ namespace Service_ApiGateway.Controllers
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PhotoNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
-        public async Task<PetPhotoReponse> GetMainPetPhotoAsync(CancellationToken cancellationToken)
+        public async Task<PetPhotoReponse> GetMainPetPhotoAsync([FromQuery]Guid accountId, CancellationToken cancellationToken)
         {
-            return await _petPhotoCleint.GetMainPetPhotoAsync(cancellationToken);
+            return await _petPhotoCleint.GetMainPetPhotoAsync(accountId, cancellationToken);
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]

@@ -12,7 +12,11 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddClientServices();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiGateway", Version = "v1" });
+    c.MapType<IFormFile>(() => new OpenApiSchema { Type = "string", Format = "binary" });
+});
 ////builder.Services.AddSwaggerGen(c =>
 ////{
 ////    var apiInfo = new OpenApiInfo
@@ -39,6 +43,7 @@ app.UseCors(policy =>
         .AllowAnyHeader()
         .AllowAnyOrigin();
 });
+app.UseStaticFiles();
 
 if (app.Environment.IsDevelopment())
 {

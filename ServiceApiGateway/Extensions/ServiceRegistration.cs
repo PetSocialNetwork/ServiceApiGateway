@@ -10,8 +10,8 @@
             services.AddServiceClient<PetSocialNetwork.ServiceNotification.INotificationClient, PetSocialNetwork.ServiceNotification.NotificationClient>("NotificationService");
             services.AddServiceClient<PetSocialNetwork.ServiceUser.IUserProfileClient, PetSocialNetwork.ServiceUser.UserProfileClient>("UserService");
             services.AddServiceClient<PetSocialNetwork.ServicePet.IPetProfileClient, PetSocialNetwork.ServicePet.PetProfileClient>("PetService");
-            services.AddServiceClient<PetSocialNetwork.ServicePhoto.IPersonalPhotoClient, PetSocialNetwork.ServicePhoto.PersonalPhotoClient>("PersonalPhotoService");
-            services.AddServiceClient<PetSocialNetwork.ServicePhoto.IPetPhotoClient, PetSocialNetwork.ServicePhoto.PetPhotoClient>("PetPhotoService");
+            services.AddServiceClient<PetSocialNetwork.ServicePhoto.IPersonalPhotoClient, PetSocialNetwork.ServicePhoto.PersonalPhotoClient>("PhotoService");
+            services.AddServiceClient<PetSocialNetwork.ServicePhoto.IPetPhotoClient, PetSocialNetwork.ServicePhoto.PetPhotoClient>("PhotoService");
 
             return services;
         }

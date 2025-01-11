@@ -278,26 +278,38 @@
         }
       }
     },
-    "/api/PetPhoto/AddAndSetPetPhoto": {
+    "/api/PetPhoto/AddPetPhoto": {
       "post": {
         "tags": [
           "PetPhoto"
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/PetPhotoRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PetPhotoRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PetPhotoRequest"
+                "required": [
+                  "AccountId",
+                  "File"
+                ],
+                "type": "object",
+                "properties": {
+                  "File": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "AccountId": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              },
+              "encoding": {
+                "File": {
+                  "style": "form"
+                },
+                "AccountId": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -326,30 +338,111 @@
         }
       }
     },
-    "/api/PetPhoto/AddPetPhoto": {
+    "/api/PetPhoto/AddAndSetPetPhoto": {
       "post": {
         "tags": [
           "PetPhoto"
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/PetPhotoRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PetPhotoRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PetPhotoRequest"
+                "required": [
+                  "AccountId",
+                  "File"
+                ],
+                "type": "object",
+                "properties": {
+                  "File": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "AccountId": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              },
+              "encoding": {
+                "File": {
+                  "style": "form"
+                },
+                "AccountId": {
+                  "style": "form"
+                }
               }
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetPhotoReponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PetPhoto/DeletePetPhoto": {
+      "delete": {
+        "tags": [
+          "PetPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "photoId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PetPhoto/SetMainPetPhoto": {
+      "get": {
+        "tags": [
+          "PetPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "photoId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "accountId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -466,60 +559,9 @@
         "tags": [
           "PetPhoto"
         ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PetPhotoReponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PetPhotoReponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PetPhotoReponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/PetPhoto/DeletePetPhoto": {
-      "delete": {
-        "tags": [
-          "PetPhoto"
-        ],
         "parameters": [
           {
-            "name": "photoId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/PetPhoto/SetMainPetPhoto": {
-      "get": {
-        "tags": [
-          "PetPhoto"
-        ],
-        "parameters": [
-          {
-            "name": "photoId",
+            "name": "accountId",
             "in": "query",
             "schema": {
               "type": "string",
@@ -602,9 +644,9 @@
       "PetPhotoReponse": {
         "required": [
           "accountId",
+          "filePath",
           "id",
-          "isMainPetPhoto",
-          "path"
+          "isMainPetPhoto"
         ],
         "type": "object",
         "properties": {
@@ -612,7 +654,7 @@
             "type": "string",
             "format": "uuid"
           },
-          "path": {
+          "filePath": {
             "minLength": 1,
             "type": "string"
           },
@@ -622,24 +664,6 @@
           },
           "isMainPetPhoto": {
             "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PetPhotoRequest": {
-        "required": [
-          "accountId",
-          "path"
-        ],
-        "type": "object",
-        "properties": {
-          "path": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "accountId": {
-            "type": "string",
-            "format": "uuid"
           }
         },
         "additionalProperties": false
