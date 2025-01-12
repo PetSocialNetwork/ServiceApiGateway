@@ -15,44 +15,23 @@ namespace Service_ApiGateway.Controllers
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PhotoNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
         [Consumes("multipart/form-data")]
-        public async Task<PetPhotoReponse> AddAndSetPetPhotoAsync(IFormFile file, [FromForm]Guid accountId, CancellationToken cancellationToken)
+        public async Task<PetPhotoReponse> AddPetPhotoAsync(IFormFile file, [FromForm] Guid accountId, [FromForm] Guid petId, CancellationToken cancellationToken)
         {
             await using var fileStream = file.OpenReadStream();
 
-            var p = new FileParameter(fileStream, "тестовое имя.jpg", file.ContentType);
-            return await _petPhotoCleint.AddAndSetPetPhotoAsync(p, accountId, cancellationToken);
-        }
-
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPost("[action]")]
-        [Consumes("multipart/form-data")]
-        public async Task<ActionResult<PetPhotoReponse>> AddPetPhotoAsync(IFormFile file, [FromForm] Guid accountId, CancellationToken cancellationToken)
-        {
-         
-            try
-            {
-                await using var fileStream = file.OpenReadStream();
-
-                var p = new FileParameter(fileStream, "тестовое имя", file.ContentType);
-                return await _petPhotoCleint.AddPetPhotoAsync(p, accountId, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var p = new FileParameter(fileStream, file.ContentType);
+            return await _petPhotoCleint.AddPetPhotoAsync(p, petId, accountId, cancellationToken);
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
-        public async IAsyncEnumerable<PetPhotoReponse>? BySearchPetPhotosAsync(Guid accountId, [EnumeratorCancellation] CancellationToken cancellationToken)
+        public async IAsyncEnumerable<PetPhotoReponse>? BySearchPetPhotosAsync(Guid accountId, Guid petId, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            foreach (var photoResponse in await _petPhotoCleint.BySearchPetPhotosAsync(accountId, cancellationToken))
+            foreach (var photoResponse in await _petPhotoCleint.BySearchPetPhotosAsync(petId, accountId, cancellationToken))
                 yield return photoResponse;
         }
 
@@ -69,9 +48,9 @@ namespace Service_ApiGateway.Controllers
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PhotoNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
-        public async Task<PetPhotoReponse> GetMainPetPhotoAsync([FromQuery]Guid accountId, CancellationToken cancellationToken)
+        public async Task<PetPhotoReponse?> GetMainPetPhotoAsync(Guid accountId, Guid petId, CancellationToken cancellationToken)
         {
-            return await _petPhotoCleint.GetMainPetPhotoAsync(accountId, cancellationToken);
+            return await _petPhotoCleint.GetMainPetPhotoAsync(petId, accountId, cancellationToken);
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
@@ -82,13 +61,18 @@ namespace Service_ApiGateway.Controllers
             await _petPhotoCleint.DeletePetPhotoAsync(photoId, cancellationToken);
         }
 
+
+
+
+
+
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PhotoNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
-        public async Task<PetPhotoReponse> SetMainPetPhotoAsync(Guid photoId, CancellationToken cancellationToken)
+        public async Task<PetPhotoReponse> SetMainPetPhotoAsync(Guid photoId, Guid accountId, CancellationToken cancellationToken)
         {
-            return await _petPhotoCleint.SetMainPetPhotoAsync(photoId, cancellationToken);
+            return await _petPhotoCleint.SetMainPetPhotoAsync(photoId, accountId, cancellationToken);
         }
     }
 }

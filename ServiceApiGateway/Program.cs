@@ -43,7 +43,6 @@ app.UseCors(policy =>
         .AllowAnyHeader()
         .AllowAnyOrigin();
 });
-app.UseStaticFiles();
 
 if (app.Environment.IsDevelopment())
 {
