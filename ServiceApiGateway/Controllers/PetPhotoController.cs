@@ -21,9 +21,12 @@ namespace Service_ApiGateway.Controllers
         public async Task<PetPhotoReponse> AddPetPhotoAsync(IFormFile file, [FromForm] Guid accountId, [FromForm] Guid petId, CancellationToken cancellationToken)
         {
             await using var fileStream = file.OpenReadStream();
-
-            var p = new FileParameter(fileStream, file.ContentType);
-            return await _petPhotoCleint.AddPetPhotoAsync(p, petId, accountId, cancellationToken);
+            
+            var fileName = Path.GetFileNameWithoutExtension(file.FileName);
+            var fileExtension = Path.GetExtension(file.FileName);
+            var uniqueFileName = $"{Guid.NewGuid()}_{fileName}{fileExtension}";
+            var photo = new FileParameter(fileStream, uniqueFileName,file.ContentType);
+            return await _petPhotoCleint.AddPetPhotoAsync(photo, petId, accountId, cancellationToken);
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]

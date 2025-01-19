@@ -4,6 +4,7 @@ using PetSocialNetwork.ServiceUser;
 
 namespace Service_ApiGateway.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserProfileController : ControllerBase
@@ -27,6 +28,7 @@ namespace Service_ApiGateway.Controllers
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
+        [Authorize]
         public async Task<UserProfileResponse> GetUserProfileByAccountIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
         {
             return  await _userProfileClient.GetUserProfileByAccountIdAsync(id, cancellationToken);

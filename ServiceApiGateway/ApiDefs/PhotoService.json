@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "ServicePhoto.WebApi",
-    "version": "1.0"
+    "title": "PhotoService",
+    "version": "v1"
   },
   "paths": {
     "/api/PersonalPhoto/AddAndSetPersonalPhoto": {
@@ -355,35 +355,30 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "AccountId",
-                  "File",
-                  "PetId"
-                ],
                 "type": "object",
                 "properties": {
-                  "File": {
+                  "petId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "accountId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "file": {
                     "type": "string",
                     "format": "binary"
-                  },
-                  "PetId": {
-                    "type": "string",
-                    "format": "uuid"
-                  },
-                  "AccountId": {
-                    "type": "string",
-                    "format": "uuid"
                   }
                 }
               },
               "encoding": {
-                "File": {
+                "petId": {
                   "style": "form"
                 },
-                "PetId": {
+                "accountId": {
                   "style": "form"
                 },
-                "AccountId": {
+                "file": {
                   "style": "form"
                 }
               }

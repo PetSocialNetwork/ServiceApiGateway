@@ -1,10 +1,21 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Service_ApiGateway.Configurations;
 using Service_ApiGateway.Extensions;
 using Service_ApiGateway.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
+JwtConfig? jwtConfig = builder.Configuration
+               .GetRequiredSection("JwtConfig")
+               .Get<JwtConfig>();
+if (jwtConfig is null)
+{
+    throw new InvalidOperationException("JwtConfig is not configured");
+}
+builder.Services.AddSingleton(jwtConfig);
 
-builder.Services.AddControllers();
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<CentralizedExceptionHandlingFilter>();
@@ -15,22 +26,34 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiGateway", Version = "v1" });
-    c.MapType<IFormFile>(() => new OpenApiSchema { Type = "string", Format = "binary" });
 });
-////builder.Services.AddSwaggerGen(c =>
-////{
-////    var apiInfo = new OpenApiInfo
-////    {
-////        Title = "Api Gateway",
-////        Version = "v1.0",
-////        Description = "Версия сборки: " + Assembly.GetEntryAssembly()!.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
-////    };
-////    c.SwaggerDoc(apiInfo.Version, apiInfo);
 
-////    c.UseAllOfToExtendReferenceSchemas();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+             .AddJwtBearer(options =>
+             {
+                 options.TokenValidationParameters = new TokenValidationParameters
+                 {
+                     IssuerSigningKey = new SymmetricSecurityKey(jwtConfig.SigningKeyBytes),
+                     ValidateIssuerSigningKey = true,
+                     ValidateLifetime = true,
+                     RequireExpirationTime = true,
+                     RequireSignedTokens = true,
+                     ValidateAudience = true,
+                     ValidateIssuer = true,
+                     ValidAudiences = new[] { jwtConfig.Audience },
+                     ValidIssuer = jwtConfig.Issuer
+                 };
+             });
 
-////    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, AppDomain.CurrentDomain.FriendlyName + ".xml"));
-////});
+builder.Services.AddAuthorizationBuilder()
+    .SetDefaultPolicy(new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+    .RequireAuthenticatedUser()
+    .Build());
 
 builder.Services.AddHttpClient();
 
@@ -52,8 +75,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

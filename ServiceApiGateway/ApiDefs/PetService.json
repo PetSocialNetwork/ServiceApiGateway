@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "ServicePet.WebApi",
-    "version": "1.0"
+    "title": "PetService",
+    "version": "v1"
   },
   "paths": {
     "/api/PetProfile/AddPetProfile": {
@@ -99,7 +99,15 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "petId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "accountId",
             "in": "query",
             "schema": {
               "type": "string",
@@ -149,7 +157,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/PetProfileResponse"
+                    "$ref": "#/components/schemas/PetProfileBySearchResponse"
                   }
                 }
               },
@@ -157,7 +165,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/PetProfileResponse"
+                    "$ref": "#/components/schemas/PetProfileBySearchResponse"
                   }
                 }
               },
@@ -165,7 +173,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/PetProfileResponse"
+                    "$ref": "#/components/schemas/PetProfileBySearchResponse"
                   }
                 }
               }
@@ -212,6 +220,7 @@
         "required": [
           "accountId",
           "age",
+          "file",
           "gender",
           "name",
           "type"
@@ -239,6 +248,56 @@
             "format": "int32"
           },
           "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "file": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PetProfileBySearchResponse": {
+        "required": [
+          "accountId",
+          "age",
+          "gender",
+          "id",
+          "name",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "gender": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "photoUrl": {
             "type": "string",
             "nullable": true
           }

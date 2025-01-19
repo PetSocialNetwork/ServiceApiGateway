@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServiceAuth;
 
 namespace Service_ApiGateway.Controllers
@@ -40,31 +41,34 @@ namespace Service_ApiGateway.Controllers
             return await _authClient.LoginByPasswordAsync(request, cancellationToken);
         }
 
+        [Authorize]
+        [HttpDelete("[action]")]
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(AccountNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpDelete("[action]")]
         public async Task DeleteAccount(Guid id, CancellationToken cancellationToken)
         {
             await _authClient.DeleteAccountAsync(id, cancellationToken);
         }
 
+        [Authorize]
+        [HttpPut("[action]")]
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PasswordNotChangedException))]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(AccountNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(InvalidPasswordException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPut("[action]")]
         public async Task UpdatePassword(UpdatePasswordRequest request, CancellationToken cancellationToken)
         {
             await _authClient.UpdatePasswordAsync(request, cancellationToken);
         }
 
+        [Authorize]
+        [HttpPut("[action]")]
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(InvalidPasswordException))]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(AccountNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPut("[action]")]
         public async Task ResetPassword(ResetPasswordRequest request, CancellationToken cancellationToken)
         {
             await _authClient.ResetPasswordAsync(request, cancellationToken);

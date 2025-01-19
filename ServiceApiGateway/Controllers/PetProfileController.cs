@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServicePet;
 using PetSocialNetwork.ServicePhoto;
 
 namespace Service_ApiGateway.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PetProfileController : ControllerBase
@@ -29,7 +31,7 @@ namespace Service_ApiGateway.Controllers
             var response = await _petProfileClient.AddPetProfileAsync(request, cancellationToken);
             await using var fileStream = file.OpenReadStream();
             var p = new FileParameter(fileStream, file.ContentType);
-            await _petPhotoCleint.AddAndSetPetPhotoAsync(p, response.Id, request.AccountId, cancellationToken);
+            await _petPhotoCleint.AddAndSetPetPhotoAsync(response.Id, request.AccountId, p, cancellationToken);
 
             return response;
         }
@@ -43,22 +45,20 @@ namespace Service_ApiGateway.Controllers
             return await _petProfileClient.GetPetProfileByIdAsync(id, cancellationToken);
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpDelete("[action]")]
         public async Task DeletePetProfileAsync([FromQuery] Guid petId, [FromQuery] Guid accountId, CancellationToken cancellationToken)
         {
-            //TODO: Транзакция
-            await _petProfileClient.DeletePetProfileAsync(petId, cancellationToken);
-            await _petPhotoCleint.DeleteAllPetPhotosAsync(petId, accountId, cancellationToken);
+            await _petProfileClient.DeletePetProfileAsync(petId, accountId, cancellationToken);
         }
 
+        [Authorize]
         ////[ProducesResponseType(StatusCodes.Status200OK)]
         ////[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileWithAccountAlreadyExistsException))]
         ////[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
-        public async Task<IEnumerable<PetProfileResponse>> GetPetProfilesByAccountIdAsync([FromBody] Guid accountId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<PetProfileBySearchResponse>> GetPetProfilesByAccountIdAsync([FromBody] Guid accountId, CancellationToken cancellationToken)
         {
             return await _petProfileClient.GetPetProfilesByAccountIdAsync(accountId, cancellationToken);
         }
@@ -70,13 +70,16 @@ namespace Service_ApiGateway.Controllers
         [Consumes("multipart/form-data")]
         public async Task UpdatePetProfileAsync(
             [FromForm] UpdatePetProfileRequest request,
-            IFormFile file, CancellationToken cancellationToken)
+            IFormFile? file, CancellationToken cancellationToken)
         {
             //TODO:Транзакция
             await _petProfileClient.UpdatePetProfileAsync(request, cancellationToken);
-            await using var fileStream = file.OpenReadStream();
-            var p = new FileParameter(fileStream, file.ContentType);
-            await _petPhotoCleint.AddAndSetPetPhotoAsync(p, request.Id, request.AccountId, cancellationToken);
+            if (file != null)
+            {
+                await using var fileStream = file.OpenReadStream();
+                var p = new FileParameter(fileStream, file.ContentType);
+                await _petPhotoCleint.AddAndSetPetPhotoAsync(request.Id, request.AccountId, p, cancellationToken);
+            }
         }
     }
 }
