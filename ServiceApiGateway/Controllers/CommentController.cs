@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 namespace Service_ApiGateway.Controllers
 {
     [Authorize]
+    [ProfileCompletionFilter]
     [Route("api/[controller]")]
     [ApiController]
     public class CommentController : ControllerBase

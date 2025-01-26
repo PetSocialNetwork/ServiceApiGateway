@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "ServiceAuth.WebApi",
-    "version": "1.0"
+    "title": "AuthService",
+    "version": "v1"
   },
   "paths": {
     "/api/Auth/Register": {

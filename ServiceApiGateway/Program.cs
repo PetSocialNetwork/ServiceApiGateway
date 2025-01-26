@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service_ApiGateway.Configurations;
@@ -20,9 +21,11 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add<CentralizedExceptionHandlingFilter>();
 });
+builder.Services.AddScoped<ProfileCompletionFilter>();
 
 builder.Services.AddClientServices();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiGateway", Version = "v1" });

@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "ServiceUser.WebApi",
-    "version": "1.0"
+    "title": "UserService",
+    "version": "v1"
   },
   "paths": {
     "/api/UserProfile/GetUserProfileById": {
@@ -256,6 +256,9 @@
           "accountId": {
             "type": "string",
             "format": "uuid"
+          },
+          "isProfileCompleted": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -290,6 +293,9 @@
           "accountId": {
             "type": "string",
             "format": "uuid"
+          },
+          "isProfileCompleted": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

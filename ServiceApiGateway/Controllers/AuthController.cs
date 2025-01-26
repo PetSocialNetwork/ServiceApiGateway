@@ -41,7 +41,7 @@ namespace Service_ApiGateway.Controllers
             return await _authClient.LoginByPasswordAsync(request, cancellationToken);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpDelete("[action]")]
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(AccountNotFoundException))]
@@ -52,6 +52,7 @@ namespace Service_ApiGateway.Controllers
         }
 
         [Authorize]
+        [ProfileCompletionFilter]
         [HttpPut("[action]")]
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PasswordNotChangedException))]
