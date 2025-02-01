@@ -70,5 +70,13 @@ namespace Service_ApiGateway.Controllers
         {
             await _userProfileClient.UpdateUserProfileAsync(request, cancellationToken);
         }
+
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<UserProfileResponse>> FindUserProfileByNameAsync([FromQuery] string firstName, [FromQuery] string lastName, CancellationToken cancellationToken)
+        {
+            return await _userProfileClient.FindUserProfileByNameAsync(firstName, lastName, cancellationToken);   
+        }
     }
 }
