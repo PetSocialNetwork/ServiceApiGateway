@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServiceFriend;
-using System.Runtime.CompilerServices;
+using PetSocialNetwork.ServiceUser;
+using Service_ApiGateway.Models.Responses;
 
 namespace Service_ApiGateway.Controllers
 {
@@ -9,14 +10,18 @@ namespace Service_ApiGateway.Controllers
     public class FriendShipController : ControllerBase
     {
         private readonly IFriendShipClient _friendShipClient;
-        public FriendShipController(IFriendShipClient friendShipClient)
+        private readonly IUserProfileClient _userProfileClient;
+        public FriendShipController(IFriendShipClient friendShipClient,
+            IUserProfileClient userProfileClient)
         {
-            _friendShipClient = friendShipClient ?? throw new ArgumentNullException(nameof(friendShipClient));
+            _friendShipClient = friendShipClient 
+                ?? throw new ArgumentNullException(nameof(friendShipClient));
+            _userProfileClient = userProfileClient ?? throw new ArgumentNullException(nameof(userProfileClient));
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpDelete("[action]")]
+        [HttpPost("[action]")]
         public async Task DeleteFriendAsync([FromBody] FriendRequest request, CancellationToken cancellationToken)
         {
             await _friendShipClient.DeleteFriendAsync(request, cancellationToken);
@@ -25,26 +30,27 @@ namespace Service_ApiGateway.Controllers
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
-        public async IAsyncEnumerable<FriendResponse> BySearchAsync([FromQuery] Guid userId, [EnumeratorCancellation] CancellationToken cancellationToken)
+        public async Task<IEnumerable<FriendResponse>> BySearchAsync([FromQuery] Guid userId, CancellationToken cancellationToken)
         {
-            foreach (var friendShip in await _friendShipClient.BySearchAsync(userId, cancellationToken))
-                yield return friendShip;
+            return await _friendShipClient.BySearchAsync(userId, cancellationToken);
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
-        public async Task<IEnumerable<FriendResponse>> GetSentRequestAsync(Guid userId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FriendsInfoResponse>> GetSentRequestAsync([FromQuery] Guid userId, CancellationToken cancellationToken)
         {
-            return await _friendShipClient.GetSentRequestAsync(userId, cancellationToken);
+            var requests = await _friendShipClient.GetSentRequestAsync(userId, cancellationToken);
+            return await GetFriendsInfoAsync(requests, cancellationToken);
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
-        public async Task<IEnumerable<FriendResponse>> GetReceivedRequestAsync(Guid userId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FriendsInfoResponse>> GetReceivedRequestAsync([FromQuery] Guid userId, CancellationToken cancellationToken)
         {
-            return await _friendShipClient.GetReceivedRequestAsync(userId, cancellationToken);
+            var requests = await _friendShipClient.GetReceivedRequestAsync(userId, cancellationToken);
+            return await GetFriendsInfoAsync(requests, cancellationToken);         
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
@@ -71,6 +77,67 @@ namespace Service_ApiGateway.Controllers
         public async Task RejectFriendAsync([FromBody] FriendRequest request, CancellationToken cancellationToken)
         {
             await _friendShipClient.RejectFriendAsync(request, cancellationToken);
+        }
+
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpGet("[action]")]
+        public async Task<bool> IsFriendAsync([FromQuery] Guid userId, [FromQuery] Guid friendId, CancellationToken cancellationToken)
+        {
+            return await _friendShipClient.IsFriendAsync(userId, friendId, cancellationToken);
+        }
+
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(FriendShipNotFoundException))]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<FriendsInfoResponse>> GetFriendsWithInfoAsync([FromQuery] Guid userId, CancellationToken cancellationToken)
+        {
+            var friends = await _friendShipClient.BySearchAsync(userId, cancellationToken);
+            return await GetFriendsInfoAsync(friends, cancellationToken);
+        }
+
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpGet("[action]")]
+        public async Task<bool> HasSentRequestAsync([FromQuery] Guid userId, [FromQuery] Guid friendId, CancellationToken cancellationToken)
+        {
+            return await _friendShipClient.HasSentRequestAsync(userId, friendId, cancellationToken);
+        }
+
+        private async Task<IEnumerable<FriendsInfoResponse>> GetFriendsInfoAsync(ICollection<FriendResponse>? friends, CancellationToken cancellationToken)
+        {
+            if (friends is null || friends.Count == 0)
+            {
+                return new List<FriendsInfoResponse>();
+            }
+
+            var friendIds = friends.Select(f => f.FriendId).ToList();
+            var profiles = await _userProfileClient.GetUserProfilesAsync(friendIds, cancellationToken);
+
+
+            if (profiles is null || profiles.Count == 0)
+            {
+                return friends.Select(f => new FriendsInfoResponse
+                {
+                    Id = f.Id,
+                }).ToList();
+            }
+
+            var profileDictionary = profiles.ToDictionary(p => p.Id, p => p);
+
+            var result = friends.Select(friend =>
+            {
+                profileDictionary.TryGetValue(friend.FriendId, out var profile);
+                return new FriendsInfoResponse
+                {
+                    Id = friend.FriendId,
+                    FirstName = profile.FirstName,
+                    LastName = profile.LastName
+                };
+            }).ToList();
+
+            return result;
         }
     }
 }
