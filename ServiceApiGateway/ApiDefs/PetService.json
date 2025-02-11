@@ -92,20 +92,43 @@
         }
       }
     },
-    "/api/PetProfile/DeletePetProfile": {
+    "/api/PetProfile/UpdatePetProfile": {
+      "put": {
+        "tags": [
+          "PetProfile"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePetProfileRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePetProfileRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePetProfileRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PetProfile/DeleteAllPetProfilesByAccountId": {
       "delete": {
         "tags": [
           "PetProfile"
         ],
         "parameters": [
-          {
-            "name": "petId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
           {
             "name": "accountId",
             "in": "query",
@@ -157,7 +180,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/PetProfileBySearchResponse"
+                    "$ref": "#/components/schemas/PetProfileResponse"
                   }
                 }
               },
@@ -165,7 +188,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/PetProfileBySearchResponse"
+                    "$ref": "#/components/schemas/PetProfileResponse"
                   }
                 }
               },
@@ -173,7 +196,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/PetProfileBySearchResponse"
+                    "$ref": "#/components/schemas/PetProfileResponse"
                   }
                 }
               }
@@ -182,30 +205,29 @@
         }
       }
     },
-    "/api/PetProfile/UpdatePetProfile": {
-      "put": {
+    "/api/PetProfile/DeletePetProfile": {
+      "delete": {
         "tags": [
           "PetProfile"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdatePetProfileRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdatePetProfileRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdatePetProfileRequest"
-              }
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "accountId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -220,7 +242,6 @@
         "required": [
           "accountId",
           "age",
-          "file",
           "gender",
           "name",
           "type"
@@ -248,56 +269,6 @@
             "format": "int32"
           },
           "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "file": {
-            "type": "string",
-            "format": "binary"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PetProfileBySearchResponse": {
-        "required": [
-          "accountId",
-          "age",
-          "gender",
-          "id",
-          "name",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "accountId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "type": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "gender": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "age": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "photoUrl": {
             "type": "string",
             "nullable": true
           }

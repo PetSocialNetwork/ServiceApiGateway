@@ -16,7 +16,6 @@ if (jwtConfig is null)
     throw new InvalidOperationException("JwtConfig is not configured");
 }
 builder.Services.AddSingleton(jwtConfig);
-
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<CentralizedExceptionHandlingFilter>();
@@ -30,7 +29,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiGateway", Version = "v1" });
 });
-
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

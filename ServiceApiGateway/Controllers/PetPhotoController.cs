@@ -26,7 +26,7 @@ namespace Service_ApiGateway.Controllers
             var fileExtension = Path.GetExtension(file.FileName);
             var uniqueFileName = $"{Guid.NewGuid()}_{fileName}{fileExtension}";
             var photo = new FileParameter(fileStream, uniqueFileName,file.ContentType);
-            return await _petPhotoCleint.AddPetPhotoAsync(photo, petId, accountId, cancellationToken);
+            return await _petPhotoCleint.AddPetPhotoAsync(petId, accountId, photo, cancellationToken);
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
@@ -63,11 +63,6 @@ namespace Service_ApiGateway.Controllers
         {
             await _petPhotoCleint.DeletePetPhotoAsync(photoId, cancellationToken);
         }
-
-
-
-
-
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PhotoNotFoundException))]

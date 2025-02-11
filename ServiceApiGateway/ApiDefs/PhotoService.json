@@ -287,35 +287,30 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "AccountId",
-                  "File",
-                  "PetId"
-                ],
                 "type": "object",
                 "properties": {
-                  "File": {
+                  "petId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "accountId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "file": {
                     "type": "string",
                     "format": "binary"
-                  },
-                  "PetId": {
-                    "type": "string",
-                    "format": "uuid"
-                  },
-                  "AccountId": {
-                    "type": "string",
-                    "format": "uuid"
                   }
                 }
               },
               "encoding": {
-                "File": {
+                "petId": {
                   "style": "form"
                 },
-                "PetId": {
+                "accountId": {
                   "style": "form"
                 },
-                "AccountId": {
+                "file": {
                   "style": "form"
                 }
               }
