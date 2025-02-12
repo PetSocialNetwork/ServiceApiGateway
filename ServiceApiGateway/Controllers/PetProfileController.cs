@@ -7,6 +7,7 @@ using Service_ApiGateway.Models.Responses;
 
 namespace Service_ApiGateway.Controllers
 {
+    [ProfileCompletionFilter]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -75,11 +76,11 @@ namespace Service_ApiGateway.Controllers
         [HttpDelete("[action]")]
         public async Task DeletePetProfileAsync([FromQuery] Guid petId, [FromQuery] Guid accountId, CancellationToken cancellationToken)
         {
+            //Транзакция
             await _petProfileClient.DeletePetProfileAsync(petId, accountId, cancellationToken);
             await _petPhotoClient.DeleteAllPetPhotosAsync(petId, accountId, cancellationToken);
         }
 
-        [Authorize]
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileWithAccountAlreadyExistsException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]

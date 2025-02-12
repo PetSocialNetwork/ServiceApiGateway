@@ -599,28 +599,29 @@
       }
     },
     "/api/PetPhoto/SetMainPetPhoto": {
-      "get": {
+      "post": {
         "tags": [
           "PetPhoto"
         ],
-        "parameters": [
-          {
-            "name": "photoId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "accountId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PetMainPhotoRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PetMainPhotoRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PetMainPhotoRequest"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -689,6 +690,29 @@
           },
           "isMainPersonalPhoto": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PetMainPhotoRequest": {
+        "required": [
+          "accountId",
+          "petId",
+          "photoId"
+        ],
+        "type": "object",
+        "properties": {
+          "petId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "photoId": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false

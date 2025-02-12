@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServicePhoto;
 using System.Runtime.CompilerServices;
 
 namespace Service_ApiGateway.Controllers
 {
+    [ProfileCompletionFilter]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PetPhotoController : ControllerBase
@@ -21,11 +24,7 @@ namespace Service_ApiGateway.Controllers
         public async Task<PetPhotoReponse> AddPetPhotoAsync(IFormFile file, [FromForm] Guid accountId, [FromForm] Guid petId, CancellationToken cancellationToken)
         {
             await using var fileStream = file.OpenReadStream();
-            
-            var fileName = Path.GetFileNameWithoutExtension(file.FileName);
-            var fileExtension = Path.GetExtension(file.FileName);
-            var uniqueFileName = $"{Guid.NewGuid()}_{fileName}{fileExtension}";
-            var photo = new FileParameter(fileStream, uniqueFileName,file.ContentType);
+            var photo = new FileParameter(fileStream, file.FileName, file.ContentType);
             return await _petPhotoCleint.AddPetPhotoAsync(petId, accountId, photo, cancellationToken);
         }
 
@@ -67,10 +66,10 @@ namespace Service_ApiGateway.Controllers
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PhotoNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpGet("[action]")]
-        public async Task<PetPhotoReponse> SetMainPetPhotoAsync(Guid photoId, Guid accountId, CancellationToken cancellationToken)
+        [HttpPost("[action]")]
+        public async Task<PetPhotoReponse> SetMainPetPhotoAsync([FromBody] PetMainPhotoRequest request, CancellationToken cancellationToken)
         {
-            return await _petPhotoCleint.SetMainPetPhotoAsync(photoId, accountId, cancellationToken);
+            return await _petPhotoCleint.SetMainPetPhotoAsync(request, cancellationToken);
         }
     }
 }

@@ -27,9 +27,9 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<OpenApiReference Include="ApiDefs\PetService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServicePet" ClassName="{controller}Client" />
-
 		<OpenApiReference Include="ApiDefs\PhotoService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter  /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServicePhoto" ClassName="{controller}Client" />
+
+		<OpenApiReference Include="ApiDefs\PetService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServicePet" ClassName="{controller}Client" />
 
 		<OpenApiReference Include="ApiDefs\FriendService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServiceFriend" ClassName="{controller}Client" />
 
