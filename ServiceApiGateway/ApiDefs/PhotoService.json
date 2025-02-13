@@ -16,7 +16,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "accountId": {
+                  "profileId": {
                     "type": "string",
                     "format": "uuid"
                   },
@@ -27,7 +27,7 @@
                 }
               },
               "encoding": {
-                "accountId": {
+                "profileId": {
                   "style": "form"
                 },
                 "file": {
@@ -72,7 +72,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "accountId": {
+                  "profileId": {
                     "type": "string",
                     "format": "uuid"
                   },
@@ -83,7 +83,7 @@
                 }
               },
               "encoding": {
-                "accountId": {
+                "profileId": {
                   "style": "form"
                 },
                 "file": {
@@ -727,9 +727,9 @@
       "PersonalPhotoResponse": {
         "required": [
           "accountId",
+          "filePath",
           "id",
-          "isMainPersonalPhoto",
-          "path"
+          "isMainPersonalPhoto"
         ],
         "type": "object",
         "properties": {
@@ -737,7 +737,7 @@
             "type": "string",
             "format": "uuid"
           },
-          "path": {
+          "filePath": {
             "minLength": 1,
             "type": "string"
           },

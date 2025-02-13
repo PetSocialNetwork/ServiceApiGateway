@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PetSocialNetwork.ServicePhoto;
 using PetSocialNetwork.ServiceUser;
+using Service_ApiGateway.Models.Responses;
 
 namespace Service_ApiGateway.Controllers
 {
@@ -10,9 +13,15 @@ namespace Service_ApiGateway.Controllers
     public class UserProfileController : ControllerBase
     {
         private readonly IUserProfileClient _userProfileClient;
-        public UserProfileController(IUserProfileClient userProfileClient)
+        private readonly IPersonalPhotoClient _personalPhotoClient;
+        private readonly IMapper _mapper;
+        public UserProfileController(IUserProfileClient userProfileClient,
+            IPersonalPhotoClient personalPhotoClient,
+            IMapper mapper)
         {
             _userProfileClient = userProfileClient ?? throw new ArgumentException(nameof(userProfileClient));
+            _personalPhotoClient = personalPhotoClient ?? throw new ArgumentException(nameof(personalPhotoClient));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [ProfileCompletionFilter]
@@ -20,9 +29,13 @@ namespace Service_ApiGateway.Controllers
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<UserProfileResponse> GetUserProfileByIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
+        public async Task<UserProfileBySearchResponse> GetUserProfileByIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
         {
-            return await _userProfileClient.GetUserProfileByIdAsync(id, cancellationToken);
+            var userProfile = await _userProfileClient.GetUserProfileByIdAsync(id, cancellationToken);
+            var photo = await _personalPhotoClient.GetMainPersonalPhotoAsync(userProfile.Id, cancellationToken);
+            var response = _mapper.Map<UserProfileBySearchResponse>(userProfile);
+            response.PhotoUrl = photo.FilePath;
+            return response;
         }
 
         [HttpGet("[action]")]
@@ -62,13 +75,21 @@ namespace Service_ApiGateway.Controllers
         }
 
         [HttpPut("[action]")]
+        [Consumes("multipart/form-data")]
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-
-        public async Task UpdateUserProfileAsync([FromBody] UpdateUserProfileRequest request, CancellationToken cancellationToken)
+        public async Task UpdateUserProfileAsync(
+            [FromForm] UpdateUserProfileRequest request,
+            IFormFile? file, CancellationToken cancellationToken)
         {
             await _userProfileClient.UpdateUserProfileAsync(request, cancellationToken);
+            if (file != null)
+            {
+                await using var fileStream = file.OpenReadStream();
+                var photo = new FileParameter(fileStream, file.FileName, file.ContentType);
+                await _personalPhotoClient.AddAndSetPersonalPhotoAsync(request.Id, photo, cancellationToken);
+            }
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]

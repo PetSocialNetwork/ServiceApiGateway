@@ -115,7 +115,6 @@ namespace Service_ApiGateway.Controllers
             var friendIds = friends.Select(f => f.FriendId).ToList();
             var profiles = await _userProfileClient.GetUserProfilesAsync(friendIds, cancellationToken);
 
-
             if (profiles is null || profiles.Count == 0)
             {
                 return friends.Select(f => new FriendsInfoResponse

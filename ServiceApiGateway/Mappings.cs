@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using PetSocialNetwork.ServicePet;
+using PetSocialNetwork.ServiceUser;
 using Service_ApiGateway.Models.Responses;
 
 namespace Service_ApiGateway
@@ -9,6 +10,7 @@ namespace Service_ApiGateway
         public Mappings()
         {
             CreateMap<PetProfileResponse, PetProfileBySearchResponse>();
+            CreateMap<UserProfileResponse, UserProfileBySearchResponse>();
         }
     }
 }

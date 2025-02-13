@@ -21,12 +21,12 @@ namespace Service_ApiGateway.Controllers
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
         public async Task<ActionResult<PersonalPhotoResponse>> AddPersonalPhotoAsync
-            ([FromForm] Guid accountId,
+            ([FromForm] Guid profileId,
             IFormFile file, CancellationToken cancellationToken)
         {
             await using var fileStream = file.OpenReadStream();
             var photo = new FileParameter(fileStream, file.FileName, file.ContentType);
-            return await _personalPhotoClient.AddPersonalPhotoAsync(accountId, photo, cancellationToken);
+            return await _personalPhotoClient.AddPersonalPhotoAsync(profileId, photo, cancellationToken);
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
