@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "ServiceComments.WebApi",
-    "version": "1.0"
+    "title": "CommentService",
+    "version": "v1"
   },
   "paths": {
     "/api/Comment/GetById": {
@@ -70,7 +70,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -97,7 +114,7 @@
         }
       }
     },
-    "/api/Comment/BySearch": {
+    "/api/Comment/GetAllCommentToPhoto": {
       "get": {
         "tags": [
           "Comment"
@@ -180,11 +197,16 @@
   "components": {
     "schemas": {
       "AddCommentRequest": {
+        "required": [
+          "photoId",
+          "text",
+          "userId"
+        ],
         "type": "object",
         "properties": {
           "text": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "userId": {
             "type": "string",
@@ -224,23 +246,19 @@
         "additionalProperties": false
       },
       "UpdateCommentRequest": {
+        "required": [
+          "id",
+          "text"
+        ],
         "type": "object",
         "properties": {
-          "text": {
-            "type": "string",
-            "nullable": true
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "photoId": {
-            "type": "string",
-            "format": "uuid"
-          },
           "id": {
             "type": "string",
             "format": "uuid"
+          },
+          "text": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false

@@ -10,7 +10,7 @@ namespace Service_ApiGateway.Models.Responses
         [Required]
         public string FirstName { get; set; }
         [Required]
-        public string? LastName { get; set; }
+        public string LastName { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public bool WalksDogs { get; set; }
         public string? Profession { get; set; }
