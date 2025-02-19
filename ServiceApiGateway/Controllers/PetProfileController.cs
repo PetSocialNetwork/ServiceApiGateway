@@ -79,6 +79,7 @@ namespace Service_ApiGateway.Controllers
             //Транзакция
             await _petProfileClient.DeletePetProfileAsync(petId, accountId, cancellationToken);
             await _petPhotoClient.DeleteAllPetPhotosAsync(petId, accountId, cancellationToken);
+            //TODO:удалить комментарии ко всем фотографиям
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
@@ -87,6 +88,7 @@ namespace Service_ApiGateway.Controllers
         [HttpPost("[action]")]
         public async Task<IEnumerable<PetProfileBySearchResponse>> GetPetProfilesByAccountIdAsync([FromBody] Guid accountId, CancellationToken cancellationToken)
         {
+            //Транзакция
             var petProfiles = await _petProfileClient.GetPetProfilesByAccountIdAsync(accountId, cancellationToken);
             List<PetProfileBySearchResponse> result = [];
 

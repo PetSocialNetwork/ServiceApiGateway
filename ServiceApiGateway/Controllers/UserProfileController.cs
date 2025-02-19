@@ -31,6 +31,7 @@ namespace Service_ApiGateway.Controllers
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<UserProfileBySearchResponse> GetUserProfileByIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
         {
+            //Транзакция
             var userProfile = await _userProfileClient.GetUserProfileByIdAsync(id, cancellationToken);
             var photo = await _personalPhotoClient.GetMainPersonalPhotoAsync(userProfile.Id, cancellationToken);
             var response = _mapper.Map<UserProfileBySearchResponse>(userProfile);
@@ -83,6 +84,7 @@ namespace Service_ApiGateway.Controllers
             [FromForm] UpdateUserProfileRequest request,
             IFormFile? file, CancellationToken cancellationToken)
         {
+            //Транзакция
             await _userProfileClient.UpdateUserProfileAsync(request, cancellationToken);
             if (file != null)
             {

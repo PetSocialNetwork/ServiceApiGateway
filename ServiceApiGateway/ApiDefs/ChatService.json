@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "ServiceChat.WebApi",
-    "version": "1.0"
+    "title": "ChatService",
+    "version": "v1"
   },
   "paths": {
     "/api/Chat/DeleteChat": {
@@ -354,15 +354,22 @@
   "components": {
     "schemas": {
       "AddChatRequest": {
+        "required": [
+          "friendIds",
+          "userId"
+        ],
         "type": "object",
         "properties": {
-          "userIds": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "friendIds": {
             "type": "array",
             "items": {
               "type": "string",
               "format": "uuid"
-            },
-            "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -370,8 +377,9 @@
       "AddChatResponse": {
         "required": [
           "createdAt",
+          "friendIds",
           "id",
-          "userIds"
+          "userId"
         ],
         "type": "object",
         "properties": {
@@ -379,11 +387,15 @@
             "type": "string",
             "format": "uuid"
           },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
           },
-          "userIds": {
+          "friendIds": {
             "type": "array",
             "items": {
               "type": "string",
@@ -434,11 +446,15 @@
             "type": "string",
             "format": "uuid"
           },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
           },
-          "userIds": {
+          "friendIds": {
             "type": "array",
             "items": {
               "type": "string",
@@ -459,8 +475,9 @@
       "ChatResponse": {
         "required": [
           "createdAt",
+          "friendIds",
           "id",
-          "userIds"
+          "userId"
         ],
         "type": "object",
         "properties": {
@@ -468,11 +485,15 @@
             "type": "string",
             "format": "uuid"
           },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
           },
-          "userIds": {
+          "friendIds": {
             "type": "array",
             "items": {
               "type": "string",

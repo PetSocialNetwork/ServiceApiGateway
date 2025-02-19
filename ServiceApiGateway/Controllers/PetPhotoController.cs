@@ -60,7 +60,9 @@ namespace Service_ApiGateway.Controllers
         [HttpDelete("[action]")]
         public async Task DeletePetPhotoAsync(Guid photoId, CancellationToken cancellationToken)
         {
+            //Транзакция
             await _petPhotoCleint.DeletePetPhotoAsync(photoId, cancellationToken);
+            //TODO: удалить комментарии к фотографиям
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]

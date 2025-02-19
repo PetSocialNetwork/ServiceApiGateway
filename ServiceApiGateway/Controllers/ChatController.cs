@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServiceChat;
+using System.Collections;
 using System.Runtime.CompilerServices;
 
 namespace Service_ApiGateway.Controllers
@@ -37,10 +38,9 @@ namespace Service_ApiGateway.Controllers
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
-        public async IAsyncEnumerable<ChatResponse> BySearchAsync([FromQuery] Guid userId, [EnumeratorCancellation] CancellationToken cancellationToken)
+        public async Task<IEnumerable<ChatResponse>> BySearchAsync([FromQuery] Guid userId, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            foreach (var chatResult in await _chatClient.BySearchAsync(userId, cancellationToken))
-                yield return chatResult;
+            return await _chatClient.BySearchAsync(userId, cancellationToken);
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]

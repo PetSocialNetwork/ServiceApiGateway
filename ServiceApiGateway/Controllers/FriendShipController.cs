@@ -40,6 +40,7 @@ namespace Service_ApiGateway.Controllers
         [HttpGet("[action]")]
         public async Task<IEnumerable<FriendsInfoResponse>> GetSentRequestAsync([FromQuery] Guid userId, CancellationToken cancellationToken)
         {
+            //Транзакция
             var requests = await _friendShipClient.GetSentRequestAsync(userId, cancellationToken);
             return await GetFriendsInfoAsync(requests, cancellationToken);
         }
@@ -49,6 +50,7 @@ namespace Service_ApiGateway.Controllers
         [HttpGet("[action]")]
         public async Task<IEnumerable<FriendsInfoResponse>> GetReceivedRequestAsync([FromQuery] Guid userId, CancellationToken cancellationToken)
         {
+            //Транзакция
             var requests = await _friendShipClient.GetReceivedRequestAsync(userId, cancellationToken);
             return await GetFriendsInfoAsync(requests, cancellationToken);         
         }
@@ -93,6 +95,7 @@ namespace Service_ApiGateway.Controllers
         [HttpGet("[action]")]
         public async Task<IEnumerable<FriendsInfoResponse>> GetFriendsWithInfoAsync([FromQuery] Guid userId, CancellationToken cancellationToken)
         {
+            //Транзакция
             var friends = await _friendShipClient.BySearchAsync(userId, cancellationToken);
             return await GetFriendsInfoAsync(friends, cancellationToken);
         }

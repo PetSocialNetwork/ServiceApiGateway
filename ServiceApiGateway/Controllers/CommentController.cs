@@ -37,6 +37,7 @@ namespace Service_ApiGateway.Controllers
         [HttpPost("[action]")]
         public async Task<CommentBySearchResponse> AddCommentAsync([FromBody] AddCommentRequest request, CancellationToken cancellationToken)
         {
+            //Транзакция
             var comment = await _commentClient.AddCommentAsync(request, cancellationToken);
             var profile = await _userProfileClient.GetUserProfileByIdAsync(comment.UserId);
             return new CommentBySearchResponse()
@@ -65,10 +66,11 @@ namespace Service_ApiGateway.Controllers
         [HttpGet("[action]")]
         public async Task<IEnumerable<CommentBySearchResponse>> GetAllCommentToPhotoAsync([FromQuery] Guid photoId, CancellationToken cancellationToken)
         {
+            //Транзакция
             var comments = await _commentClient.GetAllCommentToPhotoAsync(photoId, cancellationToken);
             if (comments == null || comments.Count == 0)
             {
-                return Enumerable.Empty<CommentBySearchResponse>();
+                return [];
             }
 
             var userIds = comments.Select(c => c.UserId).Distinct().ToList();

@@ -16,10 +16,11 @@ if (jwtConfig is null)
     throw new InvalidOperationException("JwtConfig is not configured");
 }
 builder.Services.AddSingleton(jwtConfig);
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<CentralizedExceptionHandlingFilter>();
-});
+builder.Services.AddControllers();
+//builder.Services.AddControllers(options =>
+//{
+//    options.Filters.Add<CentralizedExceptionHandlingFilter>();
+//});
 builder.Services.AddScoped<ProfileCompletionFilter>();
 
 builder.Services.AddClientServices();
