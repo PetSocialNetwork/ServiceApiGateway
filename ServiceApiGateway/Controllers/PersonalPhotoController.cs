@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PetSocialNetwork.ServiceComments;
 using PetSocialNetwork.ServicePhoto;
 using System.Runtime.CompilerServices;
 
@@ -12,9 +13,11 @@ namespace Service_ApiGateway.Controllers
     public class PersonalPhotoController : ControllerBase
     {
         private readonly IPersonalPhotoClient _personalPhotoClient;
-        public PersonalPhotoController(IPersonalPhotoClient personalPhotoClient)
+        private readonly ICommentClient _commentClient;
+        public PersonalPhotoController(IPersonalPhotoClient personalPhotoClient, ICommentClient commentClient)
         {
             _personalPhotoClient = personalPhotoClient ?? throw new ArgumentException(nameof(personalPhotoClient));
+            _commentClient = commentClient ?? throw new ArgumentException(nameof(commentClient));
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
@@ -34,7 +37,9 @@ namespace Service_ApiGateway.Controllers
         [HttpDelete("[action]")]
         public async Task DeletePersonalPhotoAsync([FromQuery] Guid photoId, CancellationToken cancellationToken)
         {
+            //Транзакция
             await _personalPhotoClient.DeletePersonalPhotoAsync(photoId, cancellationToken);
+            await _commentClient.DeleteAllCommentAsync([photoId], cancellationToken);
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]

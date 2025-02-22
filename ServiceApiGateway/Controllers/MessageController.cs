@@ -58,7 +58,7 @@ namespace Service_ApiGateway.Controllers
         [HttpPut("[action]")]
         public async Task UpdatetUserProfileAsync([FromBody] UpdateMessageRequest request, CancellationToken cancellationToken)
         {
-            await _messageClient.UpdatetUserProfileAsync(request, cancellationToken);
+            await _messageClient.UpdateMessageAsync(request, cancellationToken);
         }
     }
 }

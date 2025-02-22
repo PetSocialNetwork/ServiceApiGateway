@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PetSocialNetwork.ServiceComments;
 using PetSocialNetwork.ServicePet;
 using PetSocialNetwork.ServicePhoto;
 using Service_ApiGateway.Models.Responses;
@@ -15,13 +16,16 @@ namespace Service_ApiGateway.Controllers
     {
         private readonly IPetProfileClient _petProfileClient;
         private readonly IPetPhotoClient _petPhotoClient;
+        private readonly ICommentClient _commentClient;
         private readonly IMapper _mapper;
         public PetProfileController(IPetProfileClient petProfileClient,
             IPetPhotoClient petPhotoCleint,
+            ICommentClient commentClient,
             IMapper mapper)
         {
             _petProfileClient = petProfileClient ?? throw new ArgumentException(nameof(petProfileClient));
             _petPhotoClient = petPhotoCleint ?? throw new ArgumentException(nameof(petPhotoCleint));
+            _commentClient = commentClient ?? throw new ArgumentException(nameof(commentClient));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -78,8 +82,11 @@ namespace Service_ApiGateway.Controllers
         {
             //Транзакция
             await _petProfileClient.DeletePetProfileAsync(petId, accountId, cancellationToken);
-            await _petPhotoClient.DeleteAllPetPhotosAsync(petId, accountId, cancellationToken);
-            //TODO:удалить комментарии ко всем фотографиям
+            var photos = await _petPhotoClient.BySearchPetPhotosAsync(petId, accountId, cancellationToken);
+            Guid[] photoIds = photos.Select(p => p.Id).ToArray();
+            await Task.WhenAll(
+           _commentClient.DeleteAllCommentAsync(photoIds, cancellationToken),
+           _petPhotoClient.DeleteAllPetPhotosAsync(petId, accountId, cancellationToken));
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
@@ -103,6 +110,6 @@ namespace Service_ApiGateway.Controllers
                 }
             }
             return result;
-        }      
+        }
     }
 }

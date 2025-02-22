@@ -319,7 +319,7 @@
         }
       }
     },
-    "/api/Message/UpdatetUserProfile": {
+    "/api/Message/UpdateMessage": {
       "put": {
         "tags": [
           "Message"
@@ -518,10 +518,6 @@
             "type": "string",
             "format": "uuid"
           },
-          "userName": {
-            "type": "string",
-            "nullable": true
-          },
           "messageText": {
             "type": "string",
             "nullable": true
@@ -542,8 +538,7 @@
           "dateRecord",
           "id",
           "messageText",
-          "userId",
-          "userName"
+          "userId"
         ],
         "type": "object",
         "properties": {
@@ -558,10 +553,6 @@
           "userId": {
             "type": "string",
             "format": "uuid"
-          },
-          "userName": {
-            "minLength": 1,
-            "type": "string"
           },
           "messageText": {
             "minLength": 1,
