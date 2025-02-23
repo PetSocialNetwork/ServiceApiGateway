@@ -45,14 +45,6 @@ namespace Service_ApiGateway.Controllers
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPost("[action]")]
-        public async Task<MessageResponse> AddMessageAsync([FromBody] AddMessageRequest request, CancellationToken cancellationToken)
-        {
-            return await _messageClient.AddMessageAsync(request, cancellationToken);
-        }
-
-        //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(MessageFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPut("[action]")]

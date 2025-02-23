@@ -6,8 +6,8 @@ using Service_ApiGateway.Models.Responses;
 
 namespace Service_ApiGateway.Controllers
 {
-    [Authorize]
-    [ProfileCompletionFilter]
+    //[Authorize]
+    //[ProfileCompletionFilter]
     [Route("api/[controller]")]
     [ApiController]
     public class ChatController : ControllerBase

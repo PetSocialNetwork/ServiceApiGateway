@@ -271,54 +271,6 @@
         }
       }
     },
-    "/api/Message/AddMessage": {
-      "post": {
-        "tags": [
-          "Message"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddMessageRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddMessageRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddMessageRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/MessageResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MessageResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MessageResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/Message/UpdateMessage": {
       "put": {
         "tags": [
@@ -412,33 +364,6 @@
         },
         "additionalProperties": false
       },
-      "AddMessageRequest": {
-        "required": [
-          "chatId",
-          "messageText",
-          "userId"
-        ],
-        "type": "object",
-        "properties": {
-          "chatId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userName": {
-            "type": "string",
-            "nullable": true
-          },
-          "messageText": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "Chat": {
         "type": "object",
         "properties": {
@@ -522,6 +447,10 @@
             "type": "string",
             "nullable": true
           },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
           "dateRecord": {
             "type": "string",
             "format": "date-time"
@@ -538,7 +467,8 @@
           "dateRecord",
           "id",
           "messageText",
-          "userId"
+          "userId",
+          "userName"
         ],
         "type": "object",
         "properties": {
@@ -553,6 +483,10 @@
           "userId": {
             "type": "string",
             "format": "uuid"
+          },
+          "userName": {
+            "minLength": 1,
+            "type": "string"
           },
           "messageText": {
             "minLength": 1,

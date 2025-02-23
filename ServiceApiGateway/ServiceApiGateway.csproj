@@ -27,9 +27,9 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<OpenApiReference Include="ApiDefs\CommentsService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServiceComments" ClassName="{controller}Client" />
-
 		<OpenApiReference Include="ApiDefs\ChatService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServiceChat" ClassName="{controller}Client" />
+
+		<OpenApiReference Include="ApiDefs\CommentsService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServiceComments" ClassName="{controller}Client" />
 
 		<OpenApiReference Include="ApiDefs\PhotoService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter  /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServicePhoto" ClassName="{controller}Client" />
 
