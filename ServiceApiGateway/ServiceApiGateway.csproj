@@ -23,10 +23,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Ocelot" Version="23.4.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
 	<ItemGroup>
+		<OpenApiReference Include="ApiDefs\PetCarePlannerService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServicePetPlanner" ClassName="{controller}Client" />
+
 		<OpenApiReference Include="ApiDefs\ChatService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServiceChat" ClassName="{controller}Client" />
 
 		<OpenApiReference Include="ApiDefs\CommentsService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServiceComments" ClassName="{controller}Client" />

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
 using Service_ApiGateway.Configurations;
 using Service_ApiGateway.Extensions;
 using Service_ApiGateway.Filters;
@@ -11,6 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 JwtConfig? jwtConfig = builder.Configuration
                .GetRequiredSection("JwtConfig")
                .Get<JwtConfig>();
+
+builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+builder.Services.AddOcelot(builder.Configuration);
+
 if (jwtConfig is null)
 {
     throw new InvalidOperationException("JwtConfig is not configured");
@@ -65,9 +71,10 @@ var app = builder.Build();
 app.UseCors(policy =>
 {
     policy
+        .WithOrigins("http://localhost:3000")
         .AllowAnyMethod()
         .AllowAnyHeader()
-        .AllowAnyOrigin();
+        .AllowCredentials();
 });
 
 if (app.Environment.IsDevelopment())
@@ -77,7 +84,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseOcelot().Wait();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

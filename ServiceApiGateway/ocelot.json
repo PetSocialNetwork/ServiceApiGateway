@@ -1,0 +1,37 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/chathub",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7128
+        }
+      ],
+      "UpstreamPathTemplate": "/chathub",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "UseWebSockets": true
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7052
+        }
+      ],
+      "UpstreamPathTemplate": "/api/{everything}",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7052" //  Замените на базовый URL вашего ASP.NET Core приложения
+  }
+}

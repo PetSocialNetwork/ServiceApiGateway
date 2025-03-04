@@ -6,8 +6,8 @@ using Service_ApiGateway.Models.Responses;
 
 namespace Service_ApiGateway.Controllers
 {
-    //[Authorize]
-    //[ProfileCompletionFilter]
+    [Authorize]
+    [ProfileCompletionFilter]
     [Route("api/[controller]")]
     [ApiController]
     public class ChatController : ControllerBase
@@ -37,6 +37,29 @@ namespace Service_ApiGateway.Controllers
         {
            return await _chatClient.AddChatAsync(request, cancellationToken);
         }
+
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(MessageFoundException))]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpPost("[action]")]
+        public async Task<AddChatResponse> GetOrCreateChatAsync([FromBody] AddChatRequest request, CancellationToken cancellationToken)
+        {
+            return await _chatClient.GetOrCreateChatAsync(request, cancellationToken);
+        }
+
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(MessageFoundException))]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpGet("[action]")]
+        public async Task<AddChatResponse> GetChatByIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
+        {
+            return await _chatClient.GetChatByIdAsync(id, cancellationToken);
+        }
+
+
+
+
+
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -85,15 +108,6 @@ namespace Service_ApiGateway.Controllers
                 }
             }
             return chatBySearchResponses;
-        }
-
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(MessageFoundException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpGet("[action]")]
-        public async Task<AddChatResponse> GetChatByIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
-        {
-            return await _chatClient.GetChatByIdAsync(id, cancellationToken);
         }
     }
 }

@@ -162,6 +162,54 @@
         }
       }
     },
+    "/api/Chat/GetOrCreateChat": {
+      "post": {
+        "tags": [
+          "Chat"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddChatRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddChatRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddChatRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddChatResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddChatResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddChatResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Message/DeleteMessage": {
       "delete": {
         "tags": [
@@ -307,15 +355,10 @@
     "schemas": {
       "AddChatRequest": {
         "required": [
-          "friendIds",
-          "userId"
+          "friendIds"
         ],
         "type": "object",
         "properties": {
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
           "friendIds": {
             "type": "array",
             "items": {
@@ -330,16 +373,11 @@
         "required": [
           "createdAt",
           "friendIds",
-          "id",
-          "userId"
+          "id"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userId": {
             "type": "string",
             "format": "uuid"
           },
@@ -371,10 +409,6 @@
             "type": "string",
             "format": "uuid"
           },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -401,16 +435,11 @@
         "required": [
           "createdAt",
           "friendIds",
-          "id",
-          "userId"
+          "id"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userId": {
             "type": "string",
             "format": "uuid"
           },
