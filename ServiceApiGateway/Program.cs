@@ -15,7 +15,7 @@ JwtConfig? jwtConfig = builder.Configuration
                .Get<JwtConfig>();
 
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
-builder.Services.AddOcelot(builder.Configuration);
+//builder.Services.AddOcelot(builder.Configuration);
 
 if (jwtConfig is null)
 {
@@ -84,7 +84,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseOcelot().Wait();
+//app.UseOcelot().Wait();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

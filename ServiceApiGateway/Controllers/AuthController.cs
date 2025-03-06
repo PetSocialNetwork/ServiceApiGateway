@@ -74,5 +74,15 @@ namespace Service_ApiGateway.Controllers
         {
             await _authClient.ResetPasswordAsync(request, cancellationToken);
         }
+
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(InvalidPasswordException))]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(AccountNotFoundException))]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpPost("[action]")]
+        public async Task<bool> IsRegisterUserAsync([FromBody] ResetPasswordRequest request, CancellationToken cancellationToken)
+        {
+            return await _authClient.IsRegisterUserAsync(request, cancellationToken);
+        }
     }
 }
