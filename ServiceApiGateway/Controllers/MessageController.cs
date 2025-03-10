@@ -52,5 +52,14 @@ namespace Service_ApiGateway.Controllers
         {
             await _messageClient.UpdateMessageAsync(request, cancellationToken);
         }
+
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(MessageFoundException))]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpGet("[action]")]
+        public async Task<LastMessageResponse?> GetLastMessageByChatIdAsync([FromQuery] Guid chatId, CancellationToken cancellationToken)
+        {
+            return await _messageClient.GetLastMessageByChatIdAsync(chatId, cancellationToken);
+        }
     }
 }

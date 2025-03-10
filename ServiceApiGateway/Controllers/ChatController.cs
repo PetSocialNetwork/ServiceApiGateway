@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServiceChat;
+using PetSocialNetwork.ServicePhoto;
 using PetSocialNetwork.ServiceUser;
 using Service_ApiGateway.Models.Responses;
 
@@ -14,11 +15,18 @@ namespace Service_ApiGateway.Controllers
     {
         private readonly IChatClient _chatClient;
         private readonly IUserProfileClient _userProfileClient;
-        public ChatController(IChatClient chatClient, IUserProfileClient userProfileClient)
+        private readonly IPersonalPhotoClient _photoClient;
+        private readonly IMessageClient _messageClient;
+        public ChatController(IChatClient chatClient, 
+            IUserProfileClient userProfileClient,
+            IPersonalPhotoClient photoClient,
+            IMessageClient messageClient)
         {
             _chatClient = chatClient ?? throw new ArgumentNullException(nameof(chatClient));
             _userProfileClient = userProfileClient
                ?? throw new ArgumentNullException(nameof(userProfileClient));
+            _photoClient = photoClient ?? throw new ArgumentNullException(nameof(photoClient));
+            _messageClient = messageClient ?? throw new ArgumentNullException(nameof(messageClient));
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
@@ -91,6 +99,8 @@ namespace Service_ApiGateway.Controllers
 
                             if (profile != null)
                             {
+                                var profileImageUrl = await _photoClient.GetMainPersonalPhotoAsync(friendId, cancellationToken);
+                                var lastMessage = await _messageClient.GetLastMessageByChatIdAsync(chat.Id, cancellationToken);
                                 var chatBySearchResponse = new ChatBySearchResponse
                                 {
                                     Id = chat.Id,
@@ -98,7 +108,10 @@ namespace Service_ApiGateway.Controllers
                                     CreatedAt = chat.CreatedAt,
                                     FriendIds = friendIds,
                                     FirstName = profile.FirstName,
-                                    LastName = profile.LastName
+                                    LastName = profile.LastName,
+                                    PhotoUrl = profileImageUrl.FilePath,
+                                    LastMessage = lastMessage?.MessageText ?? string.Empty, // Use null-conditional and null-coalescing
+                                    UserName = lastMessage?.UserName ?? string.Empty
                                 };
 
                                 chatBySearchResponses.Add(chatBySearchResponse);

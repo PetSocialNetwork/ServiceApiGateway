@@ -11,15 +11,14 @@ namespace Service_ApiGateway.Filters
 
             if (message != null && statusCode != 0)
             {
-                context.Result = new ObjectResult(new ErrorResponse(message, statusCode))
+                context.Result = new ObjectResult(message)
                 {
                     StatusCode = statusCode
                 };
                 context.ExceptionHandled = true;
             }
         }
-
-        private (string?, int) TryGetUserMessageFromException(ExceptionContext context)
+        private (object?, int) TryGetUserMessageFromException(ExceptionContext context)
         {
             return context.Exception switch
             {

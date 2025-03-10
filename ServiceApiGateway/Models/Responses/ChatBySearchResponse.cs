@@ -17,5 +17,9 @@ namespace Service_ApiGateway.Models.Responses
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
+        [Required]
+        public string PhotoUrl { get; set; }
+        public string? LastMessage { get; set; }
+        public string? UserName { get; set; }
     }
 }

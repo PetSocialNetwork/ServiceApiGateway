@@ -18,17 +18,10 @@ namespace Service_ApiGateway.Controllers
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(InvalidOperationException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
-        public async Task<ActionResult<RegisterResponse>> Register
+        public async Task<RegisterResponse> Register
             (RegisterRequest request, CancellationToken cancellationToken)
         {
-            try
-            {
-                return await _authClient.RegisterAsync(request, cancellationToken);
-            }
-            catch (ApiException ex)
-            {                
-                return BadRequest(ex.Response);
-            }
+            return await _authClient.RegisterAsync(request, cancellationToken);
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
@@ -41,7 +34,7 @@ namespace Service_ApiGateway.Controllers
             return await _authClient.LoginByPasswordAsync(request, cancellationToken);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpDelete("[action]")]
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(AccountNotFoundException))]
@@ -64,7 +57,7 @@ namespace Service_ApiGateway.Controllers
             await _authClient.UpdatePasswordAsync(request, cancellationToken);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPut("[action]")]
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(InvalidPasswordException))]
