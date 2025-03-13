@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServiceAuth;
+using PetSocialNetwork.ServiceNotification;
+using PetSocialNetwork.ServicePhoto;
+using PetSocialNetwork.ServiceUser;
+using System.Security.Principal;
 
 namespace Service_ApiGateway.Controllers
 {
@@ -9,19 +13,47 @@ namespace Service_ApiGateway.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthClient _authClient;
-        public AuthController(IAuthClient authClient)
+        private readonly IUserProfileClient _userProfileClient;
+        private readonly INotificationClient _notificationClient;
+        private readonly IPersonalPhotoClient _photoClient;
+        public AuthController(IAuthClient authClient, 
+            IUserProfileClient userProfileClient,
+            INotificationClient notificationClient,
+            IPersonalPhotoClient photoClient)
         {
             _authClient = authClient ?? throw new ArgumentNullException(nameof(authClient));
+            _photoClient = photoClient ?? throw new ArgumentNullException(nameof(photoClient));
+            _notificationClient = notificationClient ?? throw new ArgumentNullException(nameof(notificationClient));
+            _userProfileClient = userProfileClient ?? throw new ArgumentNullException(nameof(userProfileClient));
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(InvalidOperationException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
+        [Consumes("multipart/form-data")]
         public async Task<RegisterResponse> Register
-            (RegisterRequest request, CancellationToken cancellationToken)
+            ([FromForm] RegisterRequest request,
+            IFormFile file,
+            CancellationToken cancellationToken)
         {
-            return await _authClient.RegisterAsync(request, cancellationToken);
+            var account = await _authClient.RegisterAsync(request, cancellationToken);
+            var userProfile = await _userProfileClient.AddUserProfileAsync(new AddUserProfileRequest()
+                {
+                    AccountId = account.Id
+                }, cancellationToken);
+
+            await _notificationClient.SendEmailAsync(new EmailRequest()
+            {
+                RecepientEmail = account.Email, 
+                Message = "Поздравляем вы успешно зарегистрированы!",
+                Subject = "Регистрация"
+            }, cancellationToken);
+
+            await using var fileStream = file.OpenReadStream();
+            var photo = new FileParameter(fileStream, file.FileName, file.ContentType);
+            await _photoClient.AddAndSetPersonalPhotoAsync(userProfile.Id, photo, cancellationToken);
+            return account;
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
@@ -57,7 +89,7 @@ namespace Service_ApiGateway.Controllers
             await _authClient.UpdatePasswordAsync(request, cancellationToken);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPut("[action]")]
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(InvalidPasswordException))]
