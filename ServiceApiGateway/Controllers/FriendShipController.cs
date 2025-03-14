@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServiceFriend;
+using PetSocialNetwork.ServicePhoto;
 using PetSocialNetwork.ServiceUser;
 using Service_ApiGateway.Models.Responses;
 
@@ -11,12 +12,15 @@ namespace Service_ApiGateway.Controllers
     {
         private readonly IFriendShipClient _friendShipClient;
         private readonly IUserProfileClient _userProfileClient;
+        private readonly IPersonalPhotoClient _photoClient;
         public FriendShipController(IFriendShipClient friendShipClient,
-            IUserProfileClient userProfileClient)
+            IUserProfileClient userProfileClient,
+            IPersonalPhotoClient photoClient)
         {
             _friendShipClient = friendShipClient 
                 ?? throw new ArgumentNullException(nameof(friendShipClient));
             _userProfileClient = userProfileClient ?? throw new ArgumentNullException(nameof(userProfileClient));
+            _photoClient = photoClient ?? throw new ArgumentNullException(nameof(photoClient));
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
@@ -116,26 +120,35 @@ namespace Service_ApiGateway.Controllers
             }
 
             var friendIds = friends.Select(f => f.FriendId).ToList();
-            var profiles = await _userProfileClient.GetUserProfilesAsync(friendIds, cancellationToken);
+            var profilesTask = _userProfileClient.GetUserProfilesAsync(friendIds, cancellationToken);
+            var photosTask = _photoClient.GetMainPersonalPhotoByIdsAsync(friendIds, cancellationToken);
 
-            if (profiles is null || profiles.Count == 0)
+            await Task.WhenAll(profilesTask, photosTask);
+
+            var profiles = await profilesTask;
+            var photos = await photosTask;
+
+            var photoDictionary = photos?.ToDictionary(p => p.ProfileId, p => p.FilePath) ?? new Dictionary<Guid, string>();
+
+            Dictionary<Guid, UserProfileResponse> profileDictionary = null;
+            if (profiles is not null && profiles.Count > 0)
             {
-                return friends.Select(f => new FriendsInfoResponse
-                {
-                    Id = f.Id,
-                }).ToList();
+                profileDictionary = profiles.ToDictionary(p => p.Id, p => p);
             }
-
-            var profileDictionary = profiles.ToDictionary(p => p.Id, p => p);
 
             var result = friends.Select(friend =>
             {
-                profileDictionary.TryGetValue(friend.FriendId, out var profile);
+                UserProfileResponse profile = null;
+                profileDictionary?.TryGetValue(friend.FriendId, out profile);
+
+                string photoUrl = photoDictionary.GetValueOrDefault(friend.FriendId);
+
                 return new FriendsInfoResponse
                 {
                     Id = friend.FriendId,
                     FirstName = profile.FirstName,
-                    LastName = profile.LastName
+                    LastName = profile.LastName,
+                    PhotoUrl = photoUrl
                 };
             }).ToList();
 

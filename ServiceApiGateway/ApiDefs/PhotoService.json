@@ -14,6 +14,9 @@
           "content": {
             "multipart/form-data": {
               "schema": {
+                "required": [
+                  "file"
+                ],
                 "type": "object",
                 "properties": {
                   "profileId": {
@@ -70,6 +73,9 @@
           "content": {
             "multipart/form-data": {
               "schema": {
+                "required": [
+                  "file"
+                ],
                 "type": "object",
                 "properties": {
                   "profileId": {
@@ -125,6 +131,28 @@
         "parameters": [
           {
             "name": "photoId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PersonalPhoto/DeleteAllPersonalPhotos": {
+      "delete": {
+        "tags": [
+          "PersonalPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "profileId",
             "in": "query",
             "schema": {
               "type": "string",
@@ -210,6 +238,75 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PersonalPhotoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PersonalPhoto/GetMainPersonalPhotoByIds": {
+      "get": {
+        "tags": [
+          "PersonalPhoto"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PersonalPhotoResponse"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PersonalPhotoResponse"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PersonalPhotoResponse"
+                  }
                 }
               }
             }
@@ -313,28 +410,6 @@
         }
       }
     },
-    "/api/PersonalPhoto/DeleteAllPersonalPhotos": {
-      "delete": {
-        "tags": [
-          "PersonalPhoto"
-        ],
-        "parameters": [
-          {
-            "name": "profileId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/PetPhoto/AddPetPhoto": {
       "post": {
         "tags": [
@@ -344,6 +419,9 @@
           "content": {
             "multipart/form-data": {
               "schema": {
+                "required": [
+                  "file"
+                ],
                 "type": "object",
                 "properties": {
                   "petId": {
@@ -407,6 +485,9 @@
           "content": {
             "multipart/form-data": {
               "schema": {
+                "required": [
+                  "file"
+                ],
                 "type": "object",
                 "properties": {
                   "petId": {
@@ -726,10 +807,10 @@
       },
       "PersonalPhotoResponse": {
         "required": [
-          "accountId",
           "filePath",
           "id",
-          "isMainPersonalPhoto"
+          "isMainPersonalPhoto",
+          "profileId"
         ],
         "type": "object",
         "properties": {
@@ -741,7 +822,7 @@
             "minLength": 1,
             "type": "string"
           },
-          "accountId": {
+          "profileId": {
             "type": "string",
             "format": "uuid"
           },
