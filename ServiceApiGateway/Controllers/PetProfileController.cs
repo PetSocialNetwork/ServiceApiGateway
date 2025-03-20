@@ -42,7 +42,7 @@ namespace Service_ApiGateway.Controllers
             var response = await _petProfileClient.AddPetProfileAsync(request, cancellationToken);
             await using var fileStream = file.OpenReadStream();
             var photo = new FileParameter(fileStream, file.FileName, file.ContentType);
-            await _petPhotoClient.AddAndSetPetPhotoAsync(response.Id, request.AccountId, photo, cancellationToken);
+            await _petPhotoClient.AddAndSetPetPhotoAsync(response.Id, request.ProfileId, photo, cancellationToken);
 
             return response;
         }
@@ -71,39 +71,39 @@ namespace Service_ApiGateway.Controllers
             {
                 await using var fileStream = file.OpenReadStream();
                 var photo = new FileParameter(fileStream, file.FileName, file.ContentType);
-                await _petPhotoClient.AddAndSetPetPhotoAsync(request.Id, request.AccountId, photo, cancellationToken);
+                await _petPhotoClient.AddAndSetPetPhotoAsync(request.Id, request.ProfileId, photo, cancellationToken);
             }
         }
 
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpDelete("[action]")]
-        public async Task DeletePetProfileAsync([FromQuery] Guid petId, [FromQuery] Guid accountId, CancellationToken cancellationToken)
+        public async Task DeletePetProfileAsync([FromQuery] Guid petId, [FromQuery] Guid profileId, CancellationToken cancellationToken)
         {
             //Транзакция
-            await _petProfileClient.DeletePetProfileAsync(petId, accountId, cancellationToken);
-            var photos = await _petPhotoClient.BySearchPetPhotosAsync(petId, accountId, cancellationToken);
+            await _petProfileClient.DeletePetProfileAsync(petId, profileId, cancellationToken);
+            var photos = await _petPhotoClient.BySearchAsync(petId, profileId, cancellationToken);
             Guid[] photoIds = photos.Select(p => p.Id).ToArray();
             await Task.WhenAll(
            _commentClient.DeleteAllCommentAsync(photoIds, cancellationToken),
-           _petPhotoClient.DeleteAllPetPhotosAsync(petId, accountId, cancellationToken));
+           _petPhotoClient.DeleteAllPetPhotosAsync(petId, profileId, cancellationToken));
         }
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileWithAccountAlreadyExistsException))]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
-        public async Task<IEnumerable<PetProfileBySearchResponse>> GetPetProfilesByAccountIdAsync([FromBody] Guid accountId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<PetProfileBySearchResponse>> GetPetProfilesAsync([FromBody] Guid profileId, CancellationToken cancellationToken)
         {
             //Транзакция
-            var petProfiles = await _petProfileClient.GetPetProfilesByAccountIdAsync(accountId, cancellationToken);
+            var petProfiles = await _petProfileClient.GetPetProfilesAsync(profileId, cancellationToken);
             List<PetProfileBySearchResponse> result = [];
 
             if (petProfiles != null)
             {
                 foreach (var petProfile in petProfiles)
                 {
-                    var photo = await _petPhotoClient.GetMainPetPhotoAsync(petProfile.Id, accountId, cancellationToken);
+                    var photo = await _petPhotoClient.GetMainPetPhotoAsync(petProfile.Id, profileId, cancellationToken);
                     var response = _mapper.Map<PetProfileBySearchResponse>(petProfile);
                     response.PhotoUrl = photo.FilePath;
                     result.Add(response);

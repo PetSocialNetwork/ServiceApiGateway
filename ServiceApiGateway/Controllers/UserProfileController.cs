@@ -24,7 +24,7 @@ namespace Service_ApiGateway.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        [ProfileCompletionFilter]
+        //[ProfileCompletionFilter]
         [HttpGet("[action]")]
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
@@ -97,9 +97,32 @@ namespace Service_ApiGateway.Controllers
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
-        public async Task<IEnumerable<UserProfileResponse>> FindUserProfileByNameAsync([FromQuery] string firstName, [FromQuery] string lastName, CancellationToken cancellationToken)
+        public async Task<IEnumerable<UserProfileBySearchResponse>> FindUserProfileByNameAsync([FromQuery] string firstName, [FromQuery] string lastName, CancellationToken cancellationToken)
         {
-            return await _userProfileClient.FindUserProfileByNameAsync(firstName, lastName, cancellationToken);   
+            var userProfiles = await _userProfileClient.FindUserProfileByNameAsync(firstName, lastName, cancellationToken);
+            var userProfileIds = userProfiles.Select(x => x.Id).ToList();
+            var photos = await _personalPhotoClient.GetMainPersonalPhotoByIdsAsync(userProfileIds, cancellationToken);
+            var photoDictionary = photos.ToDictionary(p => p.ProfileId, p => p.FilePath);
+
+            var result = userProfiles.Select(userProfile =>
+            {
+                var photoUrl = photoDictionary.GetValueOrDefault(userProfile.Id);
+
+                return new UserProfileBySearchResponse
+                {
+                    Id = userProfile.Id,
+                    FirstName = userProfile.FirstName,
+                    LastName = userProfile.LastName,
+                    DateOfBirth = userProfile.DateOfBirth,
+                    WalksDogs = userProfile.WalksDogs,
+                    Profession = userProfile.Profession,
+                    AccountId = userProfile.AccountId,
+                    IsProfileCompleted = userProfile.IsProfileCompleted,
+                    PhotoUrl = photoUrl
+                };
+            }).ToList();
+
+            return result;
         }
     }
 }

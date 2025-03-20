@@ -19,5 +19,7 @@ namespace Service_ApiGateway.Models.Responses
         public Guid PhotoId { get; init; }
         [Required]
         public DateTime CreatedAt { get; init; }
+        [Required]
+        public string PhotoUrl{ get; init; }
     }
 }

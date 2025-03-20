@@ -20,8 +20,6 @@ namespace Service_ApiGateway.Controllers
             _commentClient = commentClient ?? throw new ArgumentException(nameof(commentClient));
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
         public async Task<ActionResult<PersonalPhotoResponse>> AddPersonalPhotoAsync
             ([FromForm] Guid profileId,
@@ -32,8 +30,6 @@ namespace Service_ApiGateway.Controllers
             return await _personalPhotoClient.AddPersonalPhotoAsync(profileId, photo, cancellationToken);
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpDelete("[action]")]
         public async Task DeletePersonalPhotoAsync([FromQuery] Guid photoId, CancellationToken cancellationToken)
         {
@@ -42,44 +38,31 @@ namespace Service_ApiGateway.Controllers
             await _commentClient.DeleteAllCommentAsync([photoId], cancellationToken);
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PhotoNotFoundException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
         public async Task<PersonalPhotoResponse> GetPersonalPhotoByIdAsync([FromQuery] Guid photoId, CancellationToken cancellationToken)
         {
             return await _personalPhotoClient.GetPersonalPhotoByIdAsync(photoId, cancellationToken);
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PhotoNotFoundException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
         public async Task<PersonalPhotoResponse?> GetMainPersonalPhotoAsync([FromQuery] Guid profileId, CancellationToken cancellationToken)
         {
             return await _personalPhotoClient.GetMainPersonalPhotoAsync(profileId, cancellationToken);
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
-        public async IAsyncEnumerable<PersonalPhotoResponse>? BySearchPersonalPhotosAsync([FromQuery] Guid profileId, [EnumeratorCancellation] CancellationToken cancellationToken)
+        public async IAsyncEnumerable<PersonalPhotoResponse>? BySearchAsync([FromQuery] Guid profileId, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            foreach (var photoResponse in await _personalPhotoClient.BySearchPersonalPhotosAsync(profileId, cancellationToken))
+            foreach (var photoResponse in await _personalPhotoClient.BySearchAsync(profileId, cancellationToken))
                 yield return photoResponse;
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PhotoNotFoundException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
         public async Task<PersonalPhotoResponse> SetMainPersonalPhotoAsync([FromBody] PersonalPhotoRequest request, CancellationToken cancellationToken)
         {
             return await _personalPhotoClient.SetMainPersonalPhotoAsync(request, cancellationToken);
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpDelete("[action]")]
         public async Task DeleteAllPersonalPhotosAsync([FromQuery] Guid profileId, CancellationToken cancellationToken)
         {

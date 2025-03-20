@@ -13,16 +13,12 @@ namespace Service_ApiGateway.Controllers
             _notificationClient = notificationClient ?? throw new ArgumentException(nameof(notificationClient));
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
         public async Task SendEmail([FromBody] EmailRequest request, CancellationToken cancellationToken)
         {
             await _notificationClient.SendEmailAsync(request, cancellationToken);
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
         public async Task<int> SendCodeToEmail([FromBody] EmailRequest request, CancellationToken cancellationToken)
         {

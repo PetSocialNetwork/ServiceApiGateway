@@ -123,14 +123,14 @@
         }
       }
     },
-    "/api/PetProfile/DeleteAllPetProfilesByAccountId": {
+    "/api/PetProfile/DeleteAllPetProfiles": {
       "delete": {
         "tags": [
           "PetProfile"
         ],
         "parameters": [
           {
-            "name": "accountId",
+            "name": "profileId",
             "in": "query",
             "schema": {
               "type": "string",
@@ -145,7 +145,7 @@
         }
       }
     },
-    "/api/PetProfile/GetPetProfilesByAccountId": {
+    "/api/PetProfile/GetPetProfiles": {
       "post": {
         "tags": [
           "PetProfile"
@@ -240,15 +240,15 @@
     "schemas": {
       "AddPetProfileRequest": {
         "required": [
-          "accountId",
           "age",
           "gender",
           "name",
+          "profileId",
           "type"
         ],
         "type": "object",
         "properties": {
-          "accountId": {
+          "profileId": {
             "type": "string",
             "format": "uuid"
           },
@@ -277,11 +277,11 @@
       },
       "PetProfileResponse": {
         "required": [
-          "accountId",
           "age",
           "gender",
           "id",
           "name",
+          "profileId",
           "type"
         ],
         "type": "object",
@@ -290,7 +290,7 @@
             "type": "string",
             "format": "uuid"
           },
-          "accountId": {
+          "profileId": {
             "type": "string",
             "format": "uuid"
           },
@@ -319,11 +319,11 @@
       },
       "UpdatePetProfileRequest": {
         "required": [
-          "accountId",
           "age",
           "gender",
           "id",
           "name",
+          "profileId",
           "type"
         ],
         "type": "object",
@@ -332,7 +332,7 @@
             "type": "string",
             "format": "uuid"
           },
-          "accountId": {
+          "profileId": {
             "type": "string",
             "format": "uuid"
           },

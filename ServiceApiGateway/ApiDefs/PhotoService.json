@@ -314,7 +314,7 @@
         }
       }
     },
-    "/api/PersonalPhoto/BySearchPersonalPhotos": {
+    "/api/PersonalPhoto/BySearch": {
       "get": {
         "tags": [
           "PersonalPhoto"
@@ -428,7 +428,7 @@
                     "type": "string",
                     "format": "uuid"
                   },
-                  "accountId": {
+                  "profileId": {
                     "type": "string",
                     "format": "uuid"
                   },
@@ -442,7 +442,7 @@
                 "petId": {
                   "style": "form"
                 },
-                "accountId": {
+                "profileId": {
                   "style": "form"
                 },
                 "file": {
@@ -494,7 +494,7 @@
                     "type": "string",
                     "format": "uuid"
                   },
-                  "accountId": {
+                  "profileId": {
                     "type": "string",
                     "format": "uuid"
                   },
@@ -508,7 +508,7 @@
                 "petId": {
                   "style": "form"
                 },
-                "accountId": {
+                "profileId": {
                   "style": "form"
                 },
                 "file": {
@@ -579,7 +579,7 @@
             }
           },
           {
-            "name": "accountId",
+            "name": "profileId",
             "in": "query",
             "schema": {
               "type": "string",
@@ -648,7 +648,7 @@
             }
           },
           {
-            "name": "accountId",
+            "name": "profileId",
             "in": "query",
             "schema": {
               "type": "string",
@@ -680,7 +680,7 @@
         }
       }
     },
-    "/api/PetPhoto/BySearchPetPhotos": {
+    "/api/PetPhoto/BySearch": {
       "get": {
         "tags": [
           "PetPhoto"
@@ -695,7 +695,7 @@
             }
           },
           {
-            "name": "accountId",
+            "name": "profileId",
             "in": "query",
             "schema": {
               "type": "string",
@@ -834,9 +834,9 @@
       },
       "PetMainPhotoRequest": {
         "required": [
-          "accountId",
           "petId",
-          "photoId"
+          "photoId",
+          "profileId"
         ],
         "type": "object",
         "properties": {
@@ -844,7 +844,7 @@
             "type": "string",
             "format": "uuid"
           },
-          "accountId": {
+          "profileId": {
             "type": "string",
             "format": "uuid"
           },
@@ -857,10 +857,10 @@
       },
       "PetPhotoReponse": {
         "required": [
-          "accountId",
           "filePath",
           "id",
-          "isMainPetPhoto"
+          "isMainPetPhoto",
+          "profileId"
         ],
         "type": "object",
         "properties": {
@@ -872,7 +872,7 @@
             "minLength": 1,
             "type": "string"
           },
-          "accountId": {
+          "profileId": {
             "type": "string",
             "format": "uuid"
           },

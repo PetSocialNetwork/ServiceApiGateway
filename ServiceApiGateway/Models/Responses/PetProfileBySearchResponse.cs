@@ -8,7 +8,7 @@ namespace Service_ApiGateway.Models.Responses
         [Required]
         public Guid Id { get; init; }
         [Required]
-        public Guid AccountId { get; set; }
+        public Guid ProfileId { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
