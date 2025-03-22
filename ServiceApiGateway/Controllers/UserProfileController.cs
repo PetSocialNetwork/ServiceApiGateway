@@ -7,7 +7,7 @@ using Service_ApiGateway.Models.Responses;
 
 namespace Service_ApiGateway.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserProfileController : ControllerBase
@@ -24,11 +24,8 @@ namespace Service_ApiGateway.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        //[ProfileCompletionFilter]
+        [ProfileCompletionFilter]
         [HttpGet("[action]")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<UserProfileBySearchResponse> GetUserProfileByIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
         {
             //Транзакция
@@ -40,36 +37,24 @@ namespace Service_ApiGateway.Controllers
         }
 
         [HttpGet("[action]")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<UserProfileResponse> GetUserProfileByAccountIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
         {
             return  await _userProfileClient.GetUserProfileByAccountIdAsync(id, cancellationToken);
         }
 
         [HttpDelete("[action]")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task DeleteUserProfileAsync([FromQuery] Guid id, CancellationToken cancellationToken)
         {
             await _userProfileClient.DeleteUserProfileAsync(id, cancellationToken);
         }
 
         [HttpDelete("[action]")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task DeleteUserProfileByAccountIdAsync([FromQuery] Guid accountId, CancellationToken cancellationToken)
         {
             await _userProfileClient.DeleteUserProfileByAccountIdAsync(accountId, cancellationToken);
         }
 
         [HttpPost("[action]")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileWithAccountAlreadyExistsException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<UserProfileResponse> AddUserProfileAsync([FromBody] AddUserProfileRequest request, CancellationToken cancellationToken)
         {
             return await _userProfileClient.AddUserProfileAsync(request, cancellationToken);
@@ -77,9 +62,6 @@ namespace Service_ApiGateway.Controllers
 
         [HttpPut("[action]")]
         [Consumes("multipart/form-data")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task UpdateUserProfileAsync(
             [FromForm] UpdateUserProfileRequest request,
             IFormFile? file, CancellationToken cancellationToken)
@@ -94,8 +76,6 @@ namespace Service_ApiGateway.Controllers
             }
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
         public async Task<IEnumerable<UserProfileBySearchResponse>> FindUserProfileByNameAsync([FromQuery] string firstName, [FromQuery] string lastName, CancellationToken cancellationToken)
         {
@@ -116,6 +96,8 @@ namespace Service_ApiGateway.Controllers
                     DateOfBirth = userProfile.DateOfBirth,
                     WalksDogs = userProfile.WalksDogs,
                     Profession = userProfile.Profession,
+                    AboutSelf = userProfile.AboutSelf,
+                    Interests = userProfile.Interests,
                     AccountId = userProfile.AccountId,
                     IsProfileCompleted = userProfile.IsProfileCompleted,
                     PhotoUrl = photoUrl

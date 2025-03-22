@@ -29,9 +29,6 @@ namespace Service_ApiGateway.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileWithAccountAlreadyExistsException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
         [Consumes("multipart/form-data")]
         public async Task<PetProfileResponse> AddPetProfileAsync(
@@ -47,18 +44,16 @@ namespace Service_ApiGateway.Controllers
             return response;
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("[action]")]
-        public async Task<PetProfileResponse> GetPetProfileByIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
+        public async Task<PetProfileBySearchResponse> GetPetProfileByIdAsync([FromQuery] Guid id,CancellationToken cancellationToken)
         {
-            return await _petProfileClient.GetPetProfileByIdAsync(id, cancellationToken);
+            var profile = await _petProfileClient.GetPetProfileByIdAsync(id, cancellationToken);
+            var photo = await _petPhotoClient.GetMainPetPhotoAsync(profile.Id, profile.ProfileId, cancellationToken);
+            var response = _mapper.Map<PetProfileBySearchResponse>(profile);
+            response.PhotoUrl = photo.FilePath;
+            return response;
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPut("[action]")]
         [Consumes("multipart/form-data")]
         public async Task UpdatePetProfileAsync(
@@ -75,8 +70,6 @@ namespace Service_ApiGateway.Controllers
             }
         }
 
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileNotFoundException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpDelete("[action]")]
         public async Task DeletePetProfileAsync([FromQuery] Guid petId, [FromQuery] Guid profileId, CancellationToken cancellationToken)
         {
@@ -89,9 +82,6 @@ namespace Service_ApiGateway.Controllers
            _petPhotoClient.DeleteAllPetPhotosAsync(petId, profileId, cancellationToken));
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserProfileWithAccountAlreadyExistsException))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("[action]")]
         public async Task<IEnumerable<PetProfileBySearchResponse>> GetPetProfilesAsync([FromBody] Guid profileId, CancellationToken cancellationToken)
         {

@@ -347,6 +347,7 @@
       },
       "UpdateUserProfileRequest": {
         "required": [
+          "accountId",
           "firstName",
           "id",
           "lastName"
@@ -370,6 +371,14 @@
             "format": "date-time",
             "nullable": true
           },
+          "aboutSelf": {
+            "type": "string",
+            "nullable": true
+          },
+          "interests": {
+            "type": "string",
+            "nullable": true
+          },
           "walksDogs": {
             "type": "boolean"
           },
@@ -388,6 +397,10 @@
         "additionalProperties": false
       },
       "UserProfileResponse": {
+        "required": [
+          "accountId",
+          "id"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -411,6 +424,14 @@
             "type": "boolean"
           },
           "profession": {
+            "type": "string",
+            "nullable": true
+          },
+          "aboutSelf": {
+            "type": "string",
+            "nullable": true
+          },
+          "interests": {
             "type": "string",
             "nullable": true
           },
