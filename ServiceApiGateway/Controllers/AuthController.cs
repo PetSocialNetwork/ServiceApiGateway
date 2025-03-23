@@ -153,5 +153,11 @@ namespace Service_ApiGateway.Controllers
         {
             return await _authClient.IsRegisterUserAsync(request, cancellationToken);
         }
+
+        [HttpPost("[action]")]
+        public async Task<bool> IsTheSameUserPasswordAsync([FromBody] ResetPasswordRequest request, CancellationToken cancellationToken)
+        {
+            return await _authClient.IsTheSameUserPasswordAsync(request, cancellationToken);
+        }
     }
 }

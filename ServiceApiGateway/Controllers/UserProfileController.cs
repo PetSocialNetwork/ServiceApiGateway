@@ -37,9 +37,14 @@ namespace Service_ApiGateway.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<UserProfileResponse> GetUserProfileByAccountIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
+        public async Task<UserProfileBySearchResponse> GetUserProfileByAccountIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
         {
-            return  await _userProfileClient.GetUserProfileByAccountIdAsync(id, cancellationToken);
+            //Транзакция
+            var userProfile =  await _userProfileClient.GetUserProfileByAccountIdAsync(id, cancellationToken);
+            var photo = await _personalPhotoClient.GetMainPersonalPhotoAsync(userProfile.Id, cancellationToken);
+            var response = _mapper.Map<UserProfileBySearchResponse>(userProfile);
+            response.PhotoUrl = photo.FilePath;
+            return response;
         }
 
         [HttpDelete("[action]")]
