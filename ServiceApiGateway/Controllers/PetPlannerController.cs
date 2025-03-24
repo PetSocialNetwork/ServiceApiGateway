@@ -60,7 +60,7 @@ namespace Service_ApiGateway.Controllers
 
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpGet("[action]")]
+        [HttpPost("[action]")]
         public async Task<ICollection<RecordResponse>> GetAllRecordsByDateAsync([FromBody] RecordByDateRequest request, CancellationToken cancellationToken)
         {
             return await _petPlannerClient.GetAllRecordsByDateAsync(request, cancellationToken);

@@ -201,7 +201,7 @@
       }
     },
     "/api/PetPlanner/GetAllRecordsByDate": {
-      "get": {
+      "post": {
         "tags": [
           "PetPlanner"
         ],
