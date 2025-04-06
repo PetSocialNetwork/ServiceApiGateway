@@ -51,5 +51,11 @@ namespace Service_ApiGateway.Controllers
         {
             return await _petPlannerClient.GetAllRecordsByDateAsync(request, cancellationToken);
         }
+
+        [HttpPost("[action]")]
+        public async Task<ICollection<RecordResponse>> GetAllRecordsByPeriodAsync([FromBody] RecordByPeriodRequest request, CancellationToken cancellationToken)
+        {
+            return await _petPlannerClient.GetAllRecordsByPeriodAsync(request, cancellationToken);
+        }
     }
 }
