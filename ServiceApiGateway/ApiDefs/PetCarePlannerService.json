@@ -162,44 +162,6 @@
         }
       }
     },
-    "/api/PetPlanner/GetAllRecords": {
-      "get": {
-        "tags": [
-          "PetPlanner"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RecordResponse"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RecordResponse"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RecordResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/PetPlanner/GetAllRecordsByDate": {
       "post": {
         "tags": [
@@ -319,10 +281,15 @@
     "schemas": {
       "RecordByDateRequest": {
         "required": [
-          "date"
+          "date",
+          "profileId"
         ],
         "type": "object",
         "properties": {
+          "profileId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "date": {
             "type": "string",
             "format": "date"
@@ -333,10 +300,15 @@
       "RecordByPeriodRequest": {
         "required": [
           "endDate",
+          "profileId",
           "startDate"
         ],
         "type": "object",
         "properties": {
+          "profileId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "startDate": {
             "type": "string",
             "format": "date"
@@ -351,6 +323,7 @@
       "RecordRequest": {
         "required": [
           "date",
+          "profileId",
           "text"
         ],
         "type": "object",
@@ -358,6 +331,10 @@
           "text": {
             "minLength": 1,
             "type": "string"
+          },
+          "profileId": {
+            "type": "string",
+            "format": "uuid"
           },
           "date": {
             "type": "string",
@@ -370,11 +347,16 @@
         "required": [
           "date",
           "id",
+          "profileId",
           "text"
         ],
         "type": "object",
         "properties": {
           "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "profileId": {
             "type": "string",
             "format": "uuid"
           },

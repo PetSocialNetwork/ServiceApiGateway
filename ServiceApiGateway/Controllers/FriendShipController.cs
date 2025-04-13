@@ -6,6 +6,7 @@ using Service_ApiGateway.Models.Responses;
 
 namespace Service_ApiGateway.Controllers
 {
+    [ProfileCompletionFilter]
     [Route("api/[controller]")]
     [ApiController]
     public class FriendShipController : ControllerBase

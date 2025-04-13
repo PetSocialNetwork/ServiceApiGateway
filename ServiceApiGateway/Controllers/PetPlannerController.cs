@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServicePetPlanner;
 
 namespace Service_ApiGateway.Controllers
 {
+    [ProfileCompletionFilter]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PetPlannerController : ControllerBase
@@ -38,12 +41,6 @@ namespace Service_ApiGateway.Controllers
         public async Task<RecordResponse> UpdateRecordAsync([FromBody] UpdateRecordRequest request, CancellationToken cancellationToken)
         {
             return await _petPlannerClient.UpdateRecordAsync(request, cancellationToken);
-        }
-
-        [HttpGet("[action]")]
-        public async Task<ICollection<RecordResponse>> GetAllRecordsAsync(CancellationToken cancellationToken)
-        {
-            return await _petPlannerClient.GetAllRecordsAsync(cancellationToken);
         }
 
         [HttpPost("[action]")]
