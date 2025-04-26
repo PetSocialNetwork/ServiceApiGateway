@@ -76,20 +76,29 @@
       }
     },
     "/api/Chat/BySearch": {
-      "get": {
+      "post": {
         "tags": [
           "Chat"
         ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -233,20 +242,29 @@
       }
     },
     "/api/Message/BySearch": {
-      "get": {
+      "post": {
         "tags": [
           "Message"
         ],
-        "parameters": [
-          {
-            "name": "chatId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageRequest"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -470,6 +488,33 @@
         },
         "additionalProperties": false
       },
+      "ChatRequest": {
+        "required": [
+          "offset",
+          "take",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "take": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "offset": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
       "ChatResponse": {
         "required": [
           "createdAt",
@@ -559,6 +604,33 @@
           },
           "chat": {
             "$ref": "#/components/schemas/Chat"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MessageRequest": {
+        "required": [
+          "chatId",
+          "offset",
+          "take"
+        ],
+        "type": "object",
+        "properties": {
+          "take": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "offset": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "chatId": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false

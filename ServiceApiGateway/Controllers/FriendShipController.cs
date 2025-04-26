@@ -30,25 +30,25 @@ namespace Service_ApiGateway.Controllers
             await _friendShipClient.DeleteFriendAsync(request, cancellationToken);
         }
 
-        [HttpGet("[action]")]
-        public async Task<IEnumerable<FriendResponse>> BySearchAsync([FromQuery] Guid userId, CancellationToken cancellationToken)
+        [HttpPost("[action]")]
+        public async Task<IEnumerable<FriendResponse>> BySearchAsync([FromBody] FriendBySearchRequest request, CancellationToken cancellationToken)
         {
-            return await _friendShipClient.BySearchAsync(userId, cancellationToken);
+            return await _friendShipClient.BySearchAsync(request, cancellationToken);
         }
 
-        [HttpGet("[action]")]
-        public async Task<IEnumerable<FriendsInfoResponse>> GetSentRequestAsync([FromQuery] Guid userId, CancellationToken cancellationToken)
+        [HttpPost("[action]")]
+        public async Task<IEnumerable<FriendsInfoResponse>> GetSentRequestAsync([FromBody] FriendBySearchRequest request, CancellationToken cancellationToken)
         {
             //Транзакция
-            var requests = await _friendShipClient.GetSentRequestAsync(userId, cancellationToken);
+            var requests = await _friendShipClient.GetSentRequestAsync(request, cancellationToken);
             return await GetFriendsInfoAsync(requests, cancellationToken);
         }
 
-        [HttpGet("[action]")]
-        public async Task<IEnumerable<FriendsInfoResponse>> GetReceivedRequestAsync([FromQuery] Guid userId, CancellationToken cancellationToken)
+        [HttpPost("[action]")]
+        public async Task<IEnumerable<FriendsInfoResponse>> GetReceivedRequestAsync([FromBody] FriendBySearchRequest request, CancellationToken cancellationToken)
         {
             //Транзакция
-            var requests = await _friendShipClient.GetReceivedRequestAsync(userId, cancellationToken);
+            var requests = await _friendShipClient.GetReceivedRequestAsync(request, cancellationToken);
             return await GetFriendsInfoAsync(requests, cancellationToken);         
         }
 
@@ -70,11 +70,11 @@ namespace Service_ApiGateway.Controllers
             await _friendShipClient.RejectFriendAsync(request, cancellationToken);
         }
 
-        [HttpGet("[action]")]
-        public async Task<IEnumerable<FriendsInfoResponse>> GetFriendsWithInfoAsync([FromQuery] Guid userId, CancellationToken cancellationToken)
+        [HttpPost("[action]")]
+        public async Task<IEnumerable<FriendsInfoResponse>> GetFriendsWithInfoAsync([FromBody] FriendBySearchRequest request, CancellationToken cancellationToken)
         {
             //Транзакция
-            var friends = await _friendShipClient.BySearchAsync(userId, cancellationToken);
+            var friends = await _friendShipClient.BySearchAsync(request, cancellationToken);
             return await GetFriendsInfoAsync(friends, cancellationToken);
         }
 

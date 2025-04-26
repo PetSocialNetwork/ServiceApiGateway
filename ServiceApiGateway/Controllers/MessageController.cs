@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServiceChat;
-using System.Runtime.CompilerServices;
 
 namespace Service_ApiGateway.Controllers
 {
@@ -23,11 +22,10 @@ namespace Service_ApiGateway.Controllers
             await _messageClient.DeleteMessageAsync(id, cancellationToken);
         }
 
-        [HttpGet("[action]")]
-        public async IAsyncEnumerable<MessageResponse> BySearchAsync([FromQuery] Guid chatId, [EnumeratorCancellation] CancellationToken cancellationToken)
+        [HttpPost("[action]")]
+        public async Task<IEnumerable<MessageResponse>> BySearchAsync([FromBody] MessageRequest request, CancellationToken cancellationToken)
         {
-            foreach (var messageResult in await _messageClient.BySearchAsync(chatId, cancellationToken))
-                yield return messageResult;
+            return await _messageClient.BySearchAsync(request, cancellationToken);       
         }
 
         [HttpGet("[action]")]

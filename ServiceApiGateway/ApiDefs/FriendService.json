@@ -5,7 +5,7 @@
     "version": "v1"
   },
   "paths": {
-    "/api/FriendShip/DeleteFriend": {
+    "/api/FriendShip/BySearch": {
       "post": {
         "tags": [
           "FriendShip"
@@ -14,43 +14,21 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FriendRequest"
+                "$ref": "#/components/schemas/FriendBySearchRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/FriendRequest"
+                "$ref": "#/components/schemas/FriendBySearchRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/FriendRequest"
+                "$ref": "#/components/schemas/FriendBySearchRequest"
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/FriendShip/BySearch": {
-      "get": {
-        "tags": [
-          "FriendShip"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -85,20 +63,29 @@
       }
     },
     "/api/FriendShip/GetSentRequest": {
-      "get": {
+      "post": {
         "tags": [
           "FriendShip"
         ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FriendBySearchRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FriendBySearchRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FriendBySearchRequest"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -133,20 +120,29 @@
       }
     },
     "/api/FriendShip/GetReceivedRequest": {
-      "get": {
+      "post": {
         "tags": [
           "FriendShip"
         ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FriendBySearchRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FriendBySearchRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FriendBySearchRequest"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -176,6 +172,37 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/FriendShip/DeleteFriend": {
+      "post": {
+        "tags": [
+          "FriendShip"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FriendRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FriendRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FriendRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -370,6 +397,33 @@
   },
   "components": {
     "schemas": {
+      "FriendBySearchRequest": {
+        "required": [
+          "offset",
+          "take",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "take": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "offset": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
       "FriendRequest": {
         "required": [
           "friendId",

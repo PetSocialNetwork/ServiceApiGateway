@@ -53,10 +53,10 @@ namespace Service_ApiGateway.Controllers
             return await _chatClient.GetChatByIdAsync(id, cancellationToken);
         }
 
-        [HttpGet("[action]")]
-        public async Task<IEnumerable<ChatBySearchResponse>> BySearchAsync([FromQuery] Guid userId, CancellationToken cancellationToken)
+        [HttpPost("[action]")]
+        public async Task<IEnumerable<ChatBySearchResponse>> BySearchAsync([FromBody] ChatRequest request, CancellationToken cancellationToken)
         {
-            var chats = await _chatClient.BySearchAsync(userId, cancellationToken);
+            var chats = await _chatClient.BySearchAsync(request, cancellationToken);
 
             if (chats == null || chats.Count == 0)
             {
@@ -67,7 +67,7 @@ namespace Service_ApiGateway.Controllers
 
             foreach (var chat in chats)
             {
-                var friendIds = chat.FriendIds.Where(friendId => friendId != userId).ToList();
+                var friendIds = chat.FriendIds.Where(friendId => friendId != request.UserId).ToList();
 
                 if (friendIds.Count != 0)
                 {
@@ -86,7 +86,7 @@ namespace Service_ApiGateway.Controllers
                                 var chatBySearchResponse = new ChatBySearchResponse
                                 {
                                     Id = chat.Id,
-                                    UserId = userId,
+                                    UserId = request.UserId,
                                     CreatedAt = chat.CreatedAt,
                                     FriendIds = friendIds,
                                     FirstName = profile.FirstName,
