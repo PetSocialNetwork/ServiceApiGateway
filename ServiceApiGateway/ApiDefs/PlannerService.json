@@ -282,10 +282,24 @@
       "RecordByDateRequest": {
         "required": [
           "date",
-          "profileId"
+          "offset",
+          "profileId",
+          "take"
         ],
         "type": "object",
         "properties": {
+          "take": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "offset": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
           "profileId": {
             "type": "string",
             "format": "uuid"
@@ -300,11 +314,25 @@
       "RecordByPeriodRequest": {
         "required": [
           "endDate",
+          "offset",
           "profileId",
-          "startDate"
+          "startDate",
+          "take"
         ],
         "type": "object",
         "properties": {
+          "take": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "offset": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
           "profileId": {
             "type": "string",
             "format": "uuid"

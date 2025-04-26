@@ -58,11 +58,11 @@ namespace Service_ApiGateway.Controllers
             await _commentClient.DeleteCommentAsync(commentId, cancellationToken);
         }
 
-        [HttpGet("[action]")]
-        public async Task<IEnumerable<CommentBySearchResponse>> GetAllCommentToPhotoAsync([FromQuery] Guid photoId, CancellationToken cancellationToken)
+        [HttpPost("[action]")]
+        public async Task<IEnumerable<CommentBySearchResponse>> GetAllCommentToPhotoAsync([FromBody] CommentRequest request, CancellationToken cancellationToken)
         {
             //Транзакция
-            var comments = await _commentClient.GetAllCommentToPhotoAsync(photoId, cancellationToken);
+            var comments = await _commentClient.GetAllCommentToPhotoAsync(request, cancellationToken);
             if (comments == null || comments.Count == 0)
             {
                 return [];

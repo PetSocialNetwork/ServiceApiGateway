@@ -158,20 +158,29 @@
       }
     },
     "/api/Comment/GetAllCommentToPhoto": {
-      "get": {
+      "post": {
         "tags": [
           "Comment"
         ],
-        "parameters": [
-          {
-            "name": "photoId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentRequest"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -254,6 +263,33 @@
           "userId": {
             "type": "string",
             "format": "uuid"
+          },
+          "photoId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CommentRequest": {
+        "required": [
+          "offset",
+          "photoId",
+          "take"
+        ],
+        "type": "object",
+        "properties": {
+          "take": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "offset": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
           },
           "photoId": {
             "type": "string",
