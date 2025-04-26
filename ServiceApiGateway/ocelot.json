@@ -32,6 +32,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7052" //  Замените на базовый URL вашего ASP.NET Core приложения
+    "BaseUrl": "https://localhost:7052" 
   }
 }

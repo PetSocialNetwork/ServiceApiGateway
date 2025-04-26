@@ -1,14 +1,14 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "PetCareService",
+    "title": "PlannerService",
     "version": "v1"
   },
   "paths": {
-    "/api/PetPlanner/DeleteRecord": {
+    "/api/Planner/DeleteRecord": {
       "delete": {
         "tags": [
-          "PetPlanner"
+          "Planner"
         ],
         "parameters": [
           {
@@ -27,10 +27,10 @@
         }
       }
     },
-    "/api/PetPlanner/GetRecordById": {
+    "/api/Planner/GetRecordById": {
       "get": {
         "tags": [
-          "PetPlanner"
+          "Planner"
         ],
         "parameters": [
           {
@@ -66,10 +66,10 @@
         }
       }
     },
-    "/api/PetPlanner/AddRecord": {
+    "/api/Planner/AddRecord": {
       "post": {
         "tags": [
-          "PetPlanner"
+          "Planner"
         ],
         "requestBody": {
           "content": {
@@ -114,10 +114,10 @@
         }
       }
     },
-    "/api/PetPlanner/UpdateRecord": {
+    "/api/Planner/UpdateRecord": {
       "post": {
         "tags": [
-          "PetPlanner"
+          "Planner"
         ],
         "requestBody": {
           "content": {
@@ -162,10 +162,10 @@
         }
       }
     },
-    "/api/PetPlanner/GetAllRecordsByDate": {
+    "/api/Planner/GetAllRecordsByDate": {
       "post": {
         "tags": [
-          "PetPlanner"
+          "Planner"
         ],
         "requestBody": {
           "content": {
@@ -219,10 +219,10 @@
         }
       }
     },
-    "/api/PetPlanner/GetAllRecordsByPeriod": {
+    "/api/Planner/GetAllRecordsByPeriod": {
       "post": {
         "tags": [
-          "PetPlanner"
+          "Planner"
         ],
         "requestBody": {
           "content": {
