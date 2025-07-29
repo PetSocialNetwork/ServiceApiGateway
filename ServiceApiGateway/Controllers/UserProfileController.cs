@@ -1,9 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PetSocialNetwork.ServicePhoto;
 using PetSocialNetwork.ServiceUser;
 using Service_ApiGateway.Models.Responses;
+using Service_ApiGateway.Services.Interfaces;
 
 namespace Service_ApiGateway.Controllers
 {
@@ -12,104 +11,114 @@ namespace Service_ApiGateway.Controllers
     [ApiController]
     public class UserProfileController : ControllerBase
     {
-        private readonly IUserProfileClient _userProfileClient;
-        private readonly IPersonalPhotoClient _personalPhotoClient;
-        private readonly IMapper _mapper;
-        public UserProfileController(IUserProfileClient userProfileClient,
-            IPersonalPhotoClient personalPhotoClient,
-            IMapper mapper)
+        private readonly IUserService _userProfileService;
+        public UserProfileController(IUserService userProfileService)
         {
-            _userProfileClient = userProfileClient ?? throw new ArgumentException(nameof(userProfileClient));
-            _personalPhotoClient = personalPhotoClient ?? throw new ArgumentException(nameof(personalPhotoClient));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _userProfileService = userProfileService 
+                ?? throw new ArgumentException(nameof(userProfileService));
         }
 
+        /// <summary>
+        /// Возвращает профиль пользователя по идентификатору профиля
+        /// </summary>
+        /// <param name="id">Идентификатор профиля</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [ProfileCompletionFilter]
         [HttpGet("[action]")]
-        public async Task<UserProfileBySearchResponse> GetUserProfileByIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<UserProfileBySearchResponse> GetUserProfileByIdAsync
+            ([FromQuery] Guid id, CancellationToken cancellationToken)
         {
-            //Транзакция
-            var userProfile = await _userProfileClient.GetUserProfileByIdAsync(id, cancellationToken);
-            var photo = await _personalPhotoClient.GetMainPersonalPhotoAsync(userProfile.Id, cancellationToken);
-            var response = _mapper.Map<UserProfileBySearchResponse>(userProfile);
-            response.PhotoUrl = photo.FilePath;
-            return response;
+            return await _userProfileService.GetUserProfileByIdAsync(id, cancellationToken);
         }
 
+        /// <summary>
+        /// Возвращает профиль пользователя по идентификатору аккаунта
+        /// </summary>
+        /// <param name="id">Идентификатор аккаунта</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpGet("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<UserProfileBySearchResponse> GetUserProfileByAccountIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
         {
-            //Транзакция
-            var userProfile =  await _userProfileClient.GetUserProfileByAccountIdAsync(id, cancellationToken);
-            var photo = await _personalPhotoClient.GetMainPersonalPhotoAsync(userProfile.Id, cancellationToken);
-            var response = _mapper.Map<UserProfileBySearchResponse>(userProfile);
-            response.PhotoUrl = photo.FilePath;
-            return response;
+            return await _userProfileService.GetUserProfileByAccountIdAsync(id, cancellationToken);
         }
 
+        /// <summary>
+        /// Удаляет профиль пользователя по его идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор профиля</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpDelete("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task DeleteUserProfileAsync([FromQuery] Guid id, CancellationToken cancellationToken)
         {
-            await _userProfileClient.DeleteUserProfileAsync(id, cancellationToken);
+            await _userProfileService.DeleteUserProfileAsync(id, cancellationToken);
         }
 
+        /// <summary>
+        ///  Удаляет профиль пользователя по идентификатору аккаунта
+        /// </summary>
+        /// <param name="accountId">Идентификатор аккаунта</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpDelete("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task DeleteUserProfileByAccountIdAsync([FromQuery] Guid accountId, CancellationToken cancellationToken)
         {
-            await _userProfileClient.DeleteUserProfileByAccountIdAsync(accountId, cancellationToken);
+            await _userProfileService.DeleteUserProfileByAccountIdAsync(accountId, cancellationToken);
         }
 
+        /// <summary>
+        /// Добавляет профиль пользователя
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPost("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<UserProfileResponse> AddUserProfileAsync([FromBody] AddUserProfileRequest request, CancellationToken cancellationToken)
         {
-            return await _userProfileClient.AddUserProfileAsync(request, cancellationToken);
+            return await _userProfileService.AddUserProfileAsync(request, cancellationToken);
         }
 
+        /// <summary>
+        /// Обновляет профиль пользователя
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="file">Файл</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPut("[action]")]
         [Consumes("multipart/form-data")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task UpdateUserProfileAsync(
             [FromForm] UpdateUserProfileRequest request,
             IFormFile? file, CancellationToken cancellationToken)
         {
-            //Транзакция
-            await _userProfileClient.UpdateUserProfileAsync(request, cancellationToken);
-            if (file != null)
-            {
-                await using var fileStream = file.OpenReadStream();
-                var photo = new FileParameter(fileStream, file.FileName, file.ContentType);
-                await _personalPhotoClient.AddAndSetPersonalPhotoAsync(request.Id, photo, cancellationToken);
-            }
+           await _userProfileService.UpdateUserProfileAsync(request, file, cancellationToken);
         }
 
-        [HttpGet("[action]")]
-        public async Task<IEnumerable<UserProfileBySearchResponse>> FindUserProfileByNameAsync([FromQuery] string firstName, [FromQuery] string lastName, CancellationToken cancellationToken)
+        /// <summary>
+        /// Возвращает найденные профили по имени
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
+        [HttpPost("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<IEnumerable<UserProfileBySearchResponse>> FindUserProfileByNameAsync([FromBody] FindUserProfileRequest request, CancellationToken cancellationToken)
         {
-            var userProfiles = await _userProfileClient.FindUserProfileByNameAsync(firstName, lastName, cancellationToken);
-            var userProfileIds = userProfiles.Select(x => x.Id).ToList();
-            var photos = await _personalPhotoClient.GetMainPersonalPhotoByIdsAsync(userProfileIds, cancellationToken);
-            var photoDictionary = photos.ToDictionary(p => p.ProfileId, p => p.FilePath);
-
-            var result = userProfiles.Select(userProfile =>
-            {
-                var photoUrl = photoDictionary.GetValueOrDefault(userProfile.Id);
-
-                return new UserProfileBySearchResponse
-                {
-                    Id = userProfile.Id,
-                    FirstName = userProfile.FirstName,
-                    LastName = userProfile.LastName,
-                    DateOfBirth = userProfile.DateOfBirth,
-                    WalksDogs = userProfile.WalksDogs,
-                    Profession = userProfile.Profession,
-                    AboutSelf = userProfile.AboutSelf,
-                    Interests = userProfile.Interests,
-                    AccountId = userProfile.AccountId,
-                    IsProfileCompleted = userProfile.IsProfileCompleted,
-                    PhotoUrl = photoUrl
-                };
-            }).ToList();
-
-            return result;
+            return await _userProfileService.FindUserProfileByNameAsync(request, cancellationToken);
         }
     }
 }

@@ -8,6 +8,9 @@ using Ocelot.Middleware;
 using Service_ApiGateway.Configurations;
 using Service_ApiGateway.Extensions;
 using Service_ApiGateway.Filters;
+using Service_ApiGateway.Services.Implementations;
+using Service_ApiGateway.Services.Interfaces;
+
 
 var builder = WebApplication.CreateBuilder(args);
 JwtConfig? jwtConfig = builder.Configuration
@@ -15,7 +18,7 @@ JwtConfig? jwtConfig = builder.Configuration
                .Get<JwtConfig>();
 
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
-//builder.Services.AddOcelot(builder.Configuration);
+builder.Services.AddOcelot();
 
 if (jwtConfig is null)
 {
@@ -34,7 +37,10 @@ builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiGateway", Version = "v1" });
+    c.CustomSchemaIds(type => type.FullName);
 });
+
+builder.Services.AddCors();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAuthentication(options =>
 {
@@ -64,6 +70,15 @@ builder.Services.AddAuthorizationBuilder()
     .Build());
 
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IFriendShipService, FriendShipService>();
+builder.Services.AddScoped<IPetService, PetService>();
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IPersonalPhotoService, PersonalPhotoService>();
+builder.Services.AddScoped<IPetPhotoService, PetPhotoService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
@@ -83,10 +98,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-//app.UseOcelot().Wait();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+
+await app.UseOcelot();
 
 app.Run();

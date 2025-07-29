@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PetSocialNetwork.ServiceComments;
 using PetSocialNetwork.ServicePhoto;
-using System.Runtime.CompilerServices;
+using Service_ApiGateway.Services.Interfaces;
 
 namespace Service_ApiGateway.Controllers
 {
@@ -12,61 +11,109 @@ namespace Service_ApiGateway.Controllers
     [ApiController]
     public class PersonalPhotoController : ControllerBase
     {
-        private readonly IPersonalPhotoClient _personalPhotoClient;
-        private readonly ICommentClient _commentClient;
-        public PersonalPhotoController(IPersonalPhotoClient personalPhotoClient, ICommentClient commentClient)
+        private readonly IPersonalPhotoService _personalPhotoService;
+        public PersonalPhotoController(
+            IPersonalPhotoService personalPhotoService)
         {
-            _personalPhotoClient = personalPhotoClient ?? throw new ArgumentException(nameof(personalPhotoClient));
-            _commentClient = commentClient ?? throw new ArgumentException(nameof(commentClient));
+            _personalPhotoService = personalPhotoService 
+                ?? throw new ArgumentException(nameof(personalPhotoService));
         }
 
+        /// <summary>
+        /// Добавляет фотографию пользователю
+        /// </summary>
+        /// <param name="profileId">Идентификатор пользователя</param>
+        /// <param name="file">Файл</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPost("[action]")]
-        public async Task<ActionResult<PersonalPhotoResponse>> AddPersonalPhotoAsync
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<PersonalPhotoResponse> AddPersonalPhotoAsync
             ([FromForm] Guid profileId,
             IFormFile file, CancellationToken cancellationToken)
         {
-            await using var fileStream = file.OpenReadStream();
-            var photo = new FileParameter(fileStream, file.FileName, file.ContentType);
-            return await _personalPhotoClient.AddPersonalPhotoAsync(profileId, photo, cancellationToken);
+            return await _personalPhotoService.AddPersonalPhotoAsync(profileId, file, cancellationToken);
         }
 
+        /// <summary>
+        /// Удаляет фотографию пользователя по идентификатору
+        /// </summary>
+        /// <param name="photoId">Идентификатор фотографии</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpDelete("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task DeletePersonalPhotoAsync([FromQuery] Guid photoId, CancellationToken cancellationToken)
         {
-            //Транзакция
-            await _personalPhotoClient.DeletePersonalPhotoAsync(photoId, cancellationToken);
-            await _commentClient.DeleteAllCommentAsync([photoId], cancellationToken);
+            await _personalPhotoService.DeletePersonalPhotoAsync(photoId, cancellationToken);
         }
 
+        /// <summary>
+        /// Возвращает фотографию пользователя по идентификатору
+        /// </summary>
+        /// <param name="photoId">Идентификатор фотографии</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpGet("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<PersonalPhotoResponse> GetPersonalPhotoByIdAsync([FromQuery] Guid photoId, CancellationToken cancellationToken)
         {
-            return await _personalPhotoClient.GetPersonalPhotoByIdAsync(photoId, cancellationToken);
+            return await _personalPhotoService.GetPersonalPhotoByIdAsync(photoId, cancellationToken);
         }
 
+        /// <summary>
+        /// Возвращает главную фотографию пользователя
+        /// </summary>
+        /// <param name="profileId">Идентификатор профиля</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpGet("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
         public async Task<PersonalPhotoResponse?> GetMainPersonalPhotoAsync([FromQuery] Guid profileId, CancellationToken cancellationToken)
         {
-            return await _personalPhotoClient.GetMainPersonalPhotoAsync(profileId, cancellationToken);
+            return await _personalPhotoService.GetMainPersonalPhotoAsync(profileId, cancellationToken);
         }
 
-        [HttpGet("[action]")]
-        public async IAsyncEnumerable<PersonalPhotoResponse>? BySearchAsync([FromQuery] Guid profileId, [EnumeratorCancellation] CancellationToken cancellationToken)
-        {
-            foreach (var photoResponse in await _personalPhotoClient.BySearchAsync(profileId, cancellationToken))
-                yield return photoResponse;
-        }
-
+        /// <summary>
+        /// Возвращает все фотографии пользователя
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPost("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<ICollection<PersonalPhotoResponse>> BySearchAsync([FromBody] PersonalPhotoBySearchRequest request, CancellationToken cancellationToken)
+        {
+            return await _personalPhotoService.BySearchAsync(request, cancellationToken);
+        }
+
+        /// <summary>
+        /// Устанавливает главную фотографию пользователя
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
+        [HttpPost("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<PersonalPhotoResponse> SetMainPersonalPhotoAsync([FromBody] PersonalPhotoRequest request, CancellationToken cancellationToken)
         {
-            return await _personalPhotoClient.SetMainPersonalPhotoAsync(request, cancellationToken);
+            return await _personalPhotoService.SetMainPersonalPhotoAsync(request, cancellationToken);
         }
 
+        /// <summary>
+        /// Удаляет все фотографии пользователя
+        /// </summary>
+        /// <param name="profileId">Идентификатор профиля</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpDelete("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
         public async Task DeleteAllPersonalPhotosAsync([FromQuery] Guid profileId, CancellationToken cancellationToken)
         {
-            await _personalPhotoClient.DeleteAllPersonalPhotosAsync(profileId, cancellationToken);
+            await _personalPhotoService.DeleteAllPersonalPhotosAsync(profileId, cancellationToken);
         }
     }
 }

@@ -23,6 +23,29 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -71,6 +94,29 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -128,6 +174,9 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -167,6 +216,29 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -215,6 +287,9 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -237,6 +312,29 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -294,6 +392,9 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -333,6 +434,29 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -364,6 +488,29 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -389,20 +536,23 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/LastMessageResponse"
+                  "$ref": "#/components/schemas/MessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LastMessageResponse"
+                  "$ref": "#/components/schemas/MessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LastMessageResponse"
+                  "$ref": "#/components/schemas/MessageResponse"
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -411,9 +561,6 @@
   "components": {
     "schemas": {
       "AddChatRequest": {
-        "required": [
-          "friendIds"
-        ],
         "type": "object",
         "properties": {
           "friendIds": {
@@ -421,17 +568,13 @@
             "items": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
       },
       "AddChatResponse": {
-        "required": [
-          "createdAt",
-          "friendIds",
-          "id"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -447,7 +590,8 @@
             "items": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "nullable": true
           },
           "messages": {
             "type": "array",
@@ -489,38 +633,19 @@
         "additionalProperties": false
       },
       "ChatRequest": {
-        "required": [
-          "offset",
-          "take",
-          "userId"
-        ],
         "type": "object",
         "properties": {
-          "take": {
-            "maximum": 2147483647,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32"
-          },
-          "offset": {
-            "maximum": 2147483647,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32"
-          },
           "userId": {
             "type": "string",
             "format": "uuid"
+          },
+          "options": {
+            "$ref": "#/components/schemas/PaginationRequest"
           }
         },
         "additionalProperties": false
       },
       "ChatResponse": {
-        "required": [
-          "createdAt",
-          "friendIds",
-          "id"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -536,40 +661,7 @@
             "items": {
               "type": "string",
               "format": "uuid"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "LastMessageResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "chatId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "userName": {
-            "type": "string",
-            "nullable": true
-          },
-          "messageText": {
-            "type": "string",
-            "nullable": true
-          },
-          "dateRecord": {
-            "type": "string",
-            "format": "date-time",
+            },
             "nullable": true
           }
         },
@@ -594,10 +686,6 @@
             "type": "string",
             "nullable": true
           },
-          "userName": {
-            "type": "string",
-            "nullable": true
-          },
           "dateRecord": {
             "type": "string",
             "format": "date-time"
@@ -609,8 +697,46 @@
         "additionalProperties": false
       },
       "MessageRequest": {
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "options": {
+            "$ref": "#/components/schemas/PaginationRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "chatId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "messageText": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateRecord": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaginationRequest": {
         "required": [
-          "chatId",
           "offset",
           "take"
         ],
@@ -627,57 +753,38 @@
             "minimum": 0,
             "type": "integer",
             "format": "int32"
-          },
-          "chatId": {
-            "type": "string",
-            "format": "uuid"
           }
         },
         "additionalProperties": false
       },
-      "MessageResponse": {
-        "required": [
-          "chatId",
-          "dateRecord",
-          "id",
-          "messageText",
-          "userId",
-          "userName"
-        ],
+      "ProblemDetails": {
         "type": "object",
         "properties": {
-          "id": {
+          "type": {
             "type": "string",
-            "format": "uuid"
+            "nullable": true
           },
-          "chatId": {
+          "title": {
             "type": "string",
-            "format": "uuid"
+            "nullable": true
           },
-          "userId": {
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
             "type": "string",
-            "format": "uuid"
+            "nullable": true
           },
-          "userName": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "messageText": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "dateRecord": {
+          "instance": {
             "type": "string",
-            "format": "date-time"
+            "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": {}
       },
       "UpdateMessageRequest": {
-        "required": [
-          "id",
-          "messageText"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -685,8 +792,8 @@
             "format": "uuid"
           },
           "messageText": {
-            "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServiceChat;
-using PetSocialNetwork.ServicePhoto;
-using PetSocialNetwork.ServiceUser;
 using Service_ApiGateway.Models.Responses;
+using Service_ApiGateway.Services.Interfaces;
 
 namespace Service_ApiGateway.Controllers
 {
@@ -13,96 +12,79 @@ namespace Service_ApiGateway.Controllers
     [ApiController]
     public class ChatController : ControllerBase
     {
-        private readonly IChatClient _chatClient;
-        private readonly IUserProfileClient _userProfileClient;
-        private readonly IPersonalPhotoClient _photoClient;
-        private readonly IMessageClient _messageClient;
-        public ChatController(IChatClient chatClient, 
-            IUserProfileClient userProfileClient,
-            IPersonalPhotoClient photoClient,
-            IMessageClient messageClient)
+        private readonly IChatService _chatService;
+        public ChatController(IChatService chatService)
         {
-            _chatClient = chatClient ?? throw new ArgumentNullException(nameof(chatClient));
-            _userProfileClient = userProfileClient
-               ?? throw new ArgumentNullException(nameof(userProfileClient));
-            _photoClient = photoClient ?? throw new ArgumentNullException(nameof(photoClient));
-            _messageClient = messageClient ?? throw new ArgumentNullException(nameof(messageClient));
+            _chatService = chatService 
+                ?? throw new ArgumentNullException(nameof(chatService));
         }
 
+        /// <summary>
+        /// Удаляет чат по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор чата</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpDelete("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task DeleteChatAsync([FromQuery] Guid id, CancellationToken cancellationToken)
         {
-            await _chatClient.DeleteChatAsync(id, cancellationToken);
+            await _chatService.DeleteChatAsync(id, cancellationToken);
         }
 
+        /// <summary>
+        /// Добавляет новый чат
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPost("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<AddChatResponse> AddChatAsync([FromBody] AddChatRequest request, CancellationToken cancellationToken)
         {
-           return await _chatClient.AddChatAsync(request, cancellationToken);
+           return await _chatService.AddChatAsync(request, cancellationToken);
         }
 
+        /// <summary>
+        /// Получает имеющийся чат, либо создает
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPost("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
         public async Task<AddChatResponse> GetOrCreateChatAsync([FromBody] AddChatRequest request, CancellationToken cancellationToken)
         {
-            return await _chatClient.GetOrCreateChatAsync(request, cancellationToken);
+            return await _chatService.GetOrCreateChatAsync(request, cancellationToken);
         }
 
+        /// <summary>
+        /// Возвращает чат по идентифкатору
+        /// </summary>
+        /// <param name="id">Идентификатор чата</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpGet("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<AddChatResponse> GetChatByIdAsync([FromQuery] Guid id, CancellationToken cancellationToken)
         {
-            return await _chatClient.GetChatByIdAsync(id, cancellationToken);
+            return await _chatService.GetChatByIdAsync(id, cancellationToken);
         }
 
+        /// <summary>
+        /// Возвращает все чаты по идентификатору пользователя
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPost("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
         public async Task<IEnumerable<ChatBySearchResponse>> BySearchAsync([FromBody] ChatRequest request, CancellationToken cancellationToken)
         {
-            var chats = await _chatClient.BySearchAsync(request, cancellationToken);
-
-            if (chats == null || chats.Count == 0)
-            {
-                return [];
-            }
-
-            var chatBySearchResponses = new List<ChatBySearchResponse>();
-
-            foreach (var chat in chats)
-            {
-                var friendIds = chat.FriendIds.Where(friendId => friendId != request.UserId).ToList();
-
-                if (friendIds.Count != 0)
-                {
-                    var profiles = await _userProfileClient.GetUserProfilesAsync(friendIds, cancellationToken);
-
-                    if (profiles != null && profiles.Count != 0)
-                    {
-                        foreach (var friendId in friendIds)
-                        {
-                            var profile = profiles.FirstOrDefault(p => p.Id == friendId);
-
-                            if (profile != null)
-                            {
-                                var profileImageUrl = await _photoClient.GetMainPersonalPhotoAsync(friendId, cancellationToken);
-                                var lastMessage = await _messageClient.GetLastMessageByChatIdAsync(chat.Id, cancellationToken);
-                                var chatBySearchResponse = new ChatBySearchResponse
-                                {
-                                    Id = chat.Id,
-                                    UserId = request.UserId,
-                                    CreatedAt = chat.CreatedAt,
-                                    FriendIds = friendIds,
-                                    FirstName = profile.FirstName,
-                                    LastName = profile.LastName,
-                                    PhotoUrl = profileImageUrl.FilePath,
-                                    LastMessage = lastMessage?.MessageText ?? string.Empty, // Use null-conditional and null-coalescing
-                                    UserName = lastMessage?.UserName ?? string.Empty
-                                };
-
-                                chatBySearchResponses.Add(chatBySearchResponse);
-                            }
-                        }
-                    }
-                }
-            }
-            return chatBySearchResponses;
+           return await _chatService.BySearchAsync(request, cancellationToken);
         }
     }
 }

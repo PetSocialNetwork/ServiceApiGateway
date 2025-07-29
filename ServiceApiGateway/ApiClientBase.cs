@@ -13,32 +13,4 @@ namespace Service_ApiGateway
             settings.DefaultValueHandling = DefaultValueHandling.Include;
         }
     }
-
-    //public class ApiClientBase : IDisposable
-    //{
-    //    private readonly HttpClient _httpClient;
-
-    //    public ApiClientBase()
-    //    {
-    //        _httpClient = httpClient;
-    //    }
-
-    //    protected async Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage request)
-    //    {
-    //        try
-    //        {
-    //            return await _httpClient.SendAsync(request);
-    //        }
-    //        catch (HttpRequestException ex)
-    //        {
-    //            // Обработка ошибок сети
-    //            throw new ApiException($"Network error: {ex.Message}", (int)HttpStatusCode.InternalServerError, null, null, ex);
-    //        }
-    //    }
-
-    //    public void Dispose()
-    //    {
-    //        _httpClient?.Dispose();
-    //    }
-    //}
 }

@@ -23,6 +23,29 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -62,6 +85,29 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -110,6 +156,9 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -158,6 +207,29 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -215,6 +287,9 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -272,6 +347,9 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -279,27 +357,50 @@
   },
   "components": {
     "schemas": {
-      "RecordByDateRequest": {
-        "required": [
-          "date",
-          "offset",
-          "profileId",
-          "take"
-        ],
+      "PaginationRequest": {
         "type": "object",
         "properties": {
           "take": {
-            "maximum": 2147483647,
-            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },
           "offset": {
-            "maximum": 2147483647,
-            "minimum": 0,
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
           },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      },
+      "RecordByDateRequest": {
+        "type": "object",
+        "properties": {
           "profileId": {
             "type": "string",
             "format": "uuid"
@@ -307,32 +408,16 @@
           "date": {
             "type": "string",
             "format": "date"
+          },
+          "options": {
+            "$ref": "#/components/schemas/PaginationRequest"
           }
         },
         "additionalProperties": false
       },
       "RecordByPeriodRequest": {
-        "required": [
-          "endDate",
-          "offset",
-          "profileId",
-          "startDate",
-          "take"
-        ],
         "type": "object",
         "properties": {
-          "take": {
-            "maximum": 2147483647,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32"
-          },
-          "offset": {
-            "maximum": 2147483647,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32"
-          },
           "profileId": {
             "type": "string",
             "format": "uuid"
@@ -344,21 +429,19 @@
           "endDate": {
             "type": "string",
             "format": "date"
+          },
+          "options": {
+            "$ref": "#/components/schemas/PaginationRequest"
           }
         },
         "additionalProperties": false
       },
       "RecordRequest": {
-        "required": [
-          "date",
-          "profileId",
-          "text"
-        ],
         "type": "object",
         "properties": {
           "text": {
-            "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "profileId": {
             "type": "string",
@@ -372,12 +455,6 @@
         "additionalProperties": false
       },
       "RecordResponse": {
-        "required": [
-          "date",
-          "id",
-          "profileId",
-          "text"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -393,17 +470,13 @@
             "format": "date"
           },
           "text": {
-            "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
       },
       "UpdateRecordRequest": {
-        "required": [
-          "id",
-          "text"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -411,8 +484,8 @@
             "format": "uuid"
           },
           "text": {
-            "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

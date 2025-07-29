@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServiceFriend;
-using PetSocialNetwork.ServicePhoto;
-using PetSocialNetwork.ServiceUser;
 using Service_ApiGateway.Models.Responses;
+using Service_ApiGateway.Services.Interfaces;
 
 namespace Service_ApiGateway.Controllers
 {
@@ -11,120 +10,127 @@ namespace Service_ApiGateway.Controllers
     [ApiController]
     public class FriendShipController : ControllerBase
     {
-        private readonly IFriendShipClient _friendShipClient;
-        private readonly IUserProfileClient _userProfileClient;
-        private readonly IPersonalPhotoClient _photoClient;
-        public FriendShipController(IFriendShipClient friendShipClient,
-            IUserProfileClient userProfileClient,
-            IPersonalPhotoClient photoClient)
+        private readonly IFriendShipService _friendShipService;
+        public FriendShipController(IFriendShipService friendShipService)
         {
-            _friendShipClient = friendShipClient 
-                ?? throw new ArgumentNullException(nameof(friendShipClient));
-            _userProfileClient = userProfileClient ?? throw new ArgumentNullException(nameof(userProfileClient));
-            _photoClient = photoClient ?? throw new ArgumentNullException(nameof(photoClient));
+            _friendShipService = friendShipService 
+                ?? throw new ArgumentNullException(nameof(friendShipService));
         }
 
+        /// <summary>
+        /// Удаляет пользователя из друзей
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPost("[action]")]
-        public async Task DeleteFriendAsync([FromBody] FriendRequest request, CancellationToken cancellationToken)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task DeleteFriendAsync
+            ([FromBody] FriendRequest request, CancellationToken cancellationToken)
         {
-            await _friendShipClient.DeleteFriendAsync(request, cancellationToken);
+            await _friendShipService.DeleteFriendAsync(request, cancellationToken);
         }
 
+        /// <summary>
+        /// Возвращает отправленные заявки в друзья
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPost("[action]")]
-        public async Task<IEnumerable<FriendResponse>> BySearchAsync([FromBody] FriendBySearchRequest request, CancellationToken cancellationToken)
-        {
-            return await _friendShipClient.BySearchAsync(request, cancellationToken);
-        }
-
-        [HttpPost("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IEnumerable<FriendsInfoResponse>> GetSentRequestAsync([FromBody] FriendBySearchRequest request, CancellationToken cancellationToken)
         {
-            //Транзакция
-            var requests = await _friendShipClient.GetSentRequestAsync(request, cancellationToken);
-            return await GetFriendsInfoAsync(requests, cancellationToken);
+            return await _friendShipService.GetSentRequestAsync(request, cancellationToken);
         }
 
+        /// <summary>
+        /// Возвращает полученные заявки в друзья
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPost("[action]")]
-        public async Task<IEnumerable<FriendsInfoResponse>> GetReceivedRequestAsync([FromBody] FriendBySearchRequest request, CancellationToken cancellationToken)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<IEnumerable<FriendsInfoResponse>> GetReceivedRequestAsync
+            ([FromBody] FriendBySearchRequest request, CancellationToken cancellationToken)
         {
-            //Транзакция
-            var requests = await _friendShipClient.GetReceivedRequestAsync(request, cancellationToken);
-            return await GetFriendsInfoAsync(requests, cancellationToken);         
+            return await _friendShipService.GetReceivedRequestAsync(request, cancellationToken);  
         }
 
+        /// <summary>
+        /// Отправляет заявку на дружбу
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPost("[action]")]
-        public async Task SendFriendRequestAsync([FromBody] FriendRequest request, CancellationToken cancellationToken)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task SendFriendRequestAsync
+            ([FromBody] FriendRequest request, CancellationToken cancellationToken)
         {
-            await _friendShipClient.SendFriendRequestAsync(request, cancellationToken);
+            await _friendShipService.SendFriendRequestAsync(request, cancellationToken);
         }
 
+        /// <summary>
+        /// Принимает заявку в друзья
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPut("[action]")]
-        public async Task AcceptFriendAsync([FromBody] FriendRequest request, CancellationToken cancellationToken)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task AcceptFriendAsync
+            ([FromBody] FriendRequest request, CancellationToken cancellationToken)
         {
-            await _friendShipClient.AcceptFriendAsync(request, cancellationToken);
+            await _friendShipService.AcceptFriendAsync(request, cancellationToken);
         }
 
+        /// <summary>
+        /// Отклоняет заявку в друзья
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPut("[action]")]
-        public async Task RejectFriendAsync([FromBody] FriendRequest request, CancellationToken cancellationToken)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task RejectFriendAsync
+            ([FromBody] FriendRequest request, CancellationToken cancellationToken)
         {
-            await _friendShipClient.RejectFriendAsync(request, cancellationToken);
+            await _friendShipService.RejectFriendAsync(request, cancellationToken);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IEnumerable<FriendsInfoResponse>> GetFriendsWithInfoAsync([FromBody] FriendBySearchRequest request, CancellationToken cancellationToken)
-        {
-            //Транзакция
-            var friends = await _friendShipClient.BySearchAsync(request, cancellationToken);
-            return await GetFriendsInfoAsync(friends, cancellationToken);
-        }
-
+        /// <summary>
+        /// Проверяет, есть ли уже отправленная заявку на дружбу
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя</param>
+        /// <param name="friendId">Идентификатор друга</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpGet("[action]")]
-        public async Task<bool> HasSentRequestAsync([FromQuery] Guid userId, [FromQuery] Guid friendId, CancellationToken cancellationToken)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<bool> HasSentRequestAsync
+            ([FromBody] FriendRequest request, CancellationToken cancellationToken)
         {
-            return await _friendShipClient.HasSentRequestAsync(userId, friendId, cancellationToken);
+            return await _friendShipService.HasSentRequestAsync(request, cancellationToken);
         }
 
-        private async Task<IEnumerable<FriendsInfoResponse>> GetFriendsInfoAsync(ICollection<FriendResponse>? friends, CancellationToken cancellationToken)
+        /// <summary>
+        /// Возвращает всех друзей с информацией
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
+        [HttpPost("[action]")]
+        public async Task<IEnumerable<FriendsInfoResponse>> GetFriendsWithInfoAsync
+            ([FromBody] FriendBySearchRequest request, CancellationToken cancellationToken)
         {
-            if (friends is null || friends.Count == 0)
-            {
-                return new List<FriendsInfoResponse>();
-            }
-
-            var friendIds = friends.Select(f => f.FriendId).ToList();
-            var profilesTask = _userProfileClient.GetUserProfilesAsync(friendIds, cancellationToken);
-            var photosTask = _photoClient.GetMainPersonalPhotoByIdsAsync(friendIds, cancellationToken);
-
-            await Task.WhenAll(profilesTask, photosTask);
-
-            var profiles = await profilesTask;
-            var photos = await photosTask;
-
-            var photoDictionary = photos?.ToDictionary(p => p.ProfileId, p => p.FilePath) ?? new Dictionary<Guid, string>();
-
-            Dictionary<Guid, UserProfileResponse> profileDictionary = null;
-            if (profiles is not null && profiles.Count > 0)
-            {
-                profileDictionary = profiles.ToDictionary(p => p.Id, p => p);
-            }
-
-            var result = friends.Select(friend =>
-            {
-                UserProfileResponse profile = null;
-                profileDictionary?.TryGetValue(friend.FriendId, out profile);
-
-                string photoUrl = photoDictionary.GetValueOrDefault(friend.FriendId);
-
-                return new FriendsInfoResponse
-                {
-                    Id = friend.FriendId,
-                    FirstName = profile.FirstName,
-                    LastName = profile.LastName,
-                    PhotoUrl = photoUrl
-                };
-            }).ToList();
-
-            return result;
+            return await _friendShipService.GetFriendsWithInfoAsync(request, cancellationToken);
         }
     }
 }

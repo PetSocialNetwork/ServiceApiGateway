@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServiceComments;
-using PetSocialNetwork.ServicePhoto;
-using PetSocialNetwork.ServiceUser;
 using Service_ApiGateway.Models.Responses;
+using Service_ApiGateway.Services.Interfaces;
 
 namespace Service_ApiGateway.Controllers
 {
@@ -13,96 +12,79 @@ namespace Service_ApiGateway.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        private readonly ICommentClient _commentClient;
-        private readonly IUserProfileClient _userProfileClient;
-        private readonly IPersonalPhotoClient _photoClient;
-        public CommentController(ICommentClient commentClient,
-            IUserProfileClient userProfileClient,
-            IPersonalPhotoClient photoClient)
+        private readonly ICommentService _commentService;
+        public CommentController(ICommentService commentService)
         {
-            _commentClient = commentClient
-                ?? throw new ArgumentNullException(nameof(commentClient));
-            _userProfileClient = userProfileClient
-                ?? throw new ArgumentNullException(nameof(userProfileClient));
-            _photoClient = photoClient
-                 ?? throw new ArgumentNullException(nameof(photoClient));
+            _commentService = commentService
+                ?? throw new ArgumentNullException(nameof(commentService));
         }
 
+        /// <summary>
+        /// Возвращает комментарий по его идентификатору
+        /// </summary>
+        /// <param name="commentId">Идентификатор комментария</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpGet("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<CommentResponse> GetById([FromQuery] Guid commentId, CancellationToken cancellationToken)
         {
-            return await _commentClient.GetByIdAsync(commentId, cancellationToken);
+            return await _commentService.GetById(commentId, cancellationToken);
         }
 
+        /// <summary>
+        /// Добавляет комментарий
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPost("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
         public async Task<CommentBySearchResponse> AddCommentAsync([FromBody] AddCommentRequest request, CancellationToken cancellationToken)
         {
-            //Транзакция
-            var comment = await _commentClient.AddCommentAsync(request, cancellationToken);
-            var profile = await _userProfileClient.GetUserProfileByIdAsync(comment.UserId);
-            return new CommentBySearchResponse()
-            {
-                Id = comment.Id,
-                Text = comment.Text,
-                UserId = comment.UserId,
-                PhotoId = comment.PhotoId,
-                CreatedAt = comment.CreatedAt,
-                FirstName = profile?.FirstName,
-                LastName = profile?.LastName
-            };
+            return await _commentService.AddCommentAsync(request, cancellationToken);   
         }
 
+        /// <summary>
+        /// Удаляет комментарий по его идентификатору
+        /// </summary>
+        /// <param name="commentId">Идентификатор комментария</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpDelete("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task DeleteCommentAsync([FromQuery] Guid commentId, CancellationToken cancellationToken)
         {
-            await _commentClient.DeleteCommentAsync(commentId, cancellationToken);
+            await _commentService.DeleteCommentAsync(commentId, cancellationToken);
         }
 
+        /// <summary>
+        /// Возвращает все коментарии к фотографии
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPost("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
         public async Task<IEnumerable<CommentBySearchResponse>> GetAllCommentToPhotoAsync([FromBody] CommentRequest request, CancellationToken cancellationToken)
         {
-            //Транзакция
-            var comments = await _commentClient.GetAllCommentToPhotoAsync(request, cancellationToken);
-            if (comments == null || comments.Count == 0)
-            {
-                return [];
-            }
-
-            var userIds = comments.Select(c => c.UserId).Distinct().ToList();
-            var profileTask = _userProfileClient.GetUserProfilesAsync(userIds, cancellationToken);
-            var photoTask = _photoClient.GetMainPersonalPhotoByIdsAsync(userIds, cancellationToken);
-            await Task.WhenAll(profileTask, photoTask);
-
-            var profiles = await profileTask;
-            var photos = await photoTask;
-
-            var profileDictionary = profiles?.ToDictionary(p => p.Id, p => p);
-            var photoDictionary = photos?.ToDictionary(p => p.ProfileId, p => p);
-
-            var result = comments.Select(comment =>
-            {
-                profileDictionary.TryGetValue(comment.UserId, out var profile);
-                photoDictionary.TryGetValue(comment.UserId, out var photo);
-
-                return new CommentBySearchResponse
-                {
-                    Id = comment.Id,
-                    Text = comment.Text,
-                    UserId = comment.UserId,
-                    PhotoId = comment.PhotoId,
-                    CreatedAt = comment.CreatedAt,
-                    FirstName = profile?.FirstName,
-                    LastName = profile?.LastName,
-                    PhotoUrl = photo?.FilePath
-                };
-            }).ToList();
-            return result;
+            return await _commentService.GetAllCommentToPhotoAsync(request, cancellationToken);
         }
 
+        /// <summary>
+        /// Обновляет комментарий
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
         [HttpPut("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task UpdateCommentAsync([FromBody] UpdateCommentRequest request, CancellationToken cancellationToken)
         {
-            await _commentClient.UpdateCommentAsync(request, cancellationToken);
+            await _commentService.UpdateCommentAsync(request, cancellationToken);
         }
     }
 }
