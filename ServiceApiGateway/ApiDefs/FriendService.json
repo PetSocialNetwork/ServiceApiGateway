@@ -328,7 +328,7 @@
       }
     },
     "/api/FriendShip/IsFriend": {
-      "get": {
+      "post": {
         "tags": [
           "FriendShip"
         ],
@@ -379,7 +379,7 @@
       }
     },
     "/api/FriendShip/HasSentRequest": {
-      "get": {
+      "post": {
         "tags": [
           "FriendShip"
         ],
@@ -521,6 +521,10 @@
             "format": "uuid"
           },
           "friendId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
             "type": "string",
             "format": "uuid"
           },

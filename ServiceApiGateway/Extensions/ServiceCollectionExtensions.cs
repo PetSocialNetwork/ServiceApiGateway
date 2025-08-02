@@ -25,7 +25,7 @@
                 }
 
 
-                return (TClientInterface)constructor.Invoke(new object[] { baseAddress, httpClient });
+                return (TClientInterface)constructor.Invoke([baseAddress, httpClient]);
 
             });
 

@@ -492,14 +492,6 @@
       "FindUserProfileRequest": {
         "type": "object",
         "properties": {
-          "take": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "offset": {
-            "type": "integer",
-            "format": "int32"
-          },
           "firstName": {
             "type": "string",
             "nullable": true

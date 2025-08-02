@@ -32,15 +32,27 @@ namespace Service_ApiGateway.Services.Implementations
         public async Task<IEnumerable<FriendsInfoResponse>> GetSentRequestAsync
             (FriendBySearchRequest request, CancellationToken cancellationToken)
         {
-            var requests = await _friendShipClient.GetSentRequestAsync(request, cancellationToken);
-            return await GetFriendsInfoAsync(requests, cancellationToken);
+            var sentRequests = await _friendShipClient.GetSentRequestAsync(request, cancellationToken);
+            if (sentRequests is null || sentRequests.Count == 0)
+            {
+                return [];
+            }
+
+            var friendIds = sentRequests.Select(f => f.FriendId).ToList();
+            return await GetFriendsInfoAsync(friendIds, cancellationToken);
         }
 
         public async Task<IEnumerable<FriendsInfoResponse>> GetReceivedRequestAsync
             (FriendBySearchRequest request, CancellationToken cancellationToken)
         {
-            var requests = await _friendShipClient.GetReceivedRequestAsync(request, cancellationToken);
-            return await GetFriendsInfoAsync(requests, cancellationToken);
+            var receivedRequests = await _friendShipClient.GetReceivedRequestAsync(request, cancellationToken);
+            if (receivedRequests is null || receivedRequests.Count == 0)
+            {
+                return [];
+            }
+
+            var friendIds = receivedRequests.Select(f => f.FriendId).ToList();
+            return await GetFriendsInfoAsync(friendIds, cancellationToken);
         }
 
         public async Task SendFriendRequestAsync
@@ -71,19 +83,29 @@ namespace Service_ApiGateway.Services.Implementations
             (FriendBySearchRequest request, CancellationToken cancellationToken)
         {
             var friends = await _friendShipClient.BySearchAsync(request, cancellationToken);
-            return await GetFriendsInfoAsync(friends, cancellationToken);
-        }
-
-        //рефакторинг
-        private async Task<IEnumerable<FriendsInfoResponse>> GetFriendsInfoAsync
-            (ICollection<FriendResponse>? friends, CancellationToken cancellationToken)
-        {
             if (friends is null || friends.Count == 0)
             {
                 return [];
             }
 
-            var friendIds = friends.Select(f => f.FriendId).ToList();
+            var friendIdsExcludingUserAsFriend = friends
+                .Where(f => f.FriendId != request.UserId)
+                .Select(f => f.FriendId);
+
+            var friendIdsExcludingUserAsUser = friends
+                .Where(f => f.UserId != request.UserId)
+                .Select(f => f.UserId);
+
+            var friendIds = friendIdsExcludingUserAsFriend
+                .Union(friendIdsExcludingUserAsUser)
+                .Distinct()
+                .ToList();
+
+            return await GetFriendsInfoAsync(friendIds, cancellationToken);
+        }
+
+        private async Task<IEnumerable<FriendsInfoResponse>> GetFriendsInfoAsync(List<Guid> friendIds, CancellationToken cancellationToken)
+        {
             var profilesTask = _userProfileClient.GetUserProfilesAsync(friendIds, cancellationToken);
             var photosTask = _photoClient.GetMainPersonalPhotoByIdsAsync(friendIds, cancellationToken);
 
@@ -92,27 +114,19 @@ namespace Service_ApiGateway.Services.Implementations
             var profiles = await profilesTask;
             var photos = await photosTask;
 
-            var photoDictionary = photos?.ToDictionary(p => p.ProfileId, p => p.FilePath)
-                ?? [];
+            var profileDictionary = profiles.ToDictionary(p => p.Id);
+            var photoDictionary = photos.ToDictionary(p => p.ProfileId, p => p.FilePath);
 
-            Dictionary<Guid, UserProfileResponse> profileDictionary = null;
-            if (profiles is not null && profiles.Count > 0)
+            var result = friendIds.Select(friendId =>
             {
-                profileDictionary = profiles.ToDictionary(p => p.Id, p => p);
-            }
-
-            var result = friends.Select(friend =>
-            {
-                UserProfileResponse profile = null;
-                profileDictionary?.TryGetValue(friend.FriendId, out profile);
-
-                string photoUrl = photoDictionary.GetValueOrDefault(friend.FriendId);
+                profileDictionary.TryGetValue(friendId, out var profile);
+                photoDictionary.TryGetValue(friendId, out var photoUrl);
 
                 return new FriendsInfoResponse
                 {
-                    Id = friend.FriendId,
-                    FirstName = profile.FirstName,
-                    LastName = profile.LastName,
+                    Id = friendId,
+                    FirstName = profile?.FirstName,
+                    LastName = profile?.LastName,
                     PhotoUrl = photoUrl
                 };
             }).ToList();

@@ -11,20 +11,21 @@ using Service_ApiGateway.Filters;
 using Service_ApiGateway.Services.Implementations;
 using Service_ApiGateway.Services.Interfaces;
 
-
 var builder = WebApplication.CreateBuilder(args);
-JwtConfig? jwtConfig = builder.Configuration
+var jwtConfig = builder.Configuration
                .GetRequiredSection("JwtConfig")
                .Get<JwtConfig>();
 
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
-builder.Services.AddOcelot();
+
 
 if (jwtConfig is null)
 {
     throw new InvalidOperationException("JwtConfig is not configured");
 }
+
 builder.Services.AddSingleton(jwtConfig);
+builder.Services.AddOcelot();
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<CentralizedExceptionHandlingFilter>();
@@ -59,7 +60,7 @@ builder.Services.AddAuthentication(options =>
                      RequireSignedTokens = true,
                      ValidateAudience = true,
                      ValidateIssuer = true,
-                     ValidAudiences = new[] { jwtConfig.Audience },
+                     ValidAudiences = [jwtConfig.Audience],
                      ValidIssuer = jwtConfig.Issuer
                  };
              });

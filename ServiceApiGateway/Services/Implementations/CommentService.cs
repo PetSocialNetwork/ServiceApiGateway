@@ -33,7 +33,7 @@ namespace Service_ApiGateway.Services.Implementations
             (AddCommentRequest request, CancellationToken cancellationToken)
         {
             var comment = await _commentClient.AddCommentAsync(request, cancellationToken);
-            var profile = await _userProfileClient.GetUserProfileByIdAsync(comment.UserId);
+            var profile = await _userProfileClient.GetUserProfileByIdAsync(comment.UserId, cancellationToken);
             return new CommentBySearchResponse()
             {
                 Id = comment.Id,

@@ -973,7 +973,7 @@
             "type": "string",
             "format": "uuid"
           },
-          "pagination": {
+          "options": {
             "$ref": "#/components/schemas/PaginationRequest"
           }
         },
@@ -1049,7 +1049,7 @@
             "type": "string",
             "format": "uuid"
           },
-          "pagination": {
+          "options": {
             "$ref": "#/components/schemas/PaginationRequest"
           }
         },

@@ -55,52 +55,62 @@ namespace Service_ApiGateway.Services.Implementations
             (ChatRequest request, CancellationToken cancellationToken)
         {
             var chats = await _chatClient.BySearchAsync(request, cancellationToken);
-
-            if (chats.Count == 0)
+            if (chats == null || chats.Count == 0)
             {
                 return [];
             }
 
-            var chatBySearchResponses = new List<ChatBySearchResponse>();
+            var responses = new List<ChatBySearchResponse>();
 
             foreach (var chat in chats)
             {
-                var friendIds = chat.FriendIds.Where(friendId => friendId != request.UserId).ToList();
+                var friendIds = chat.FriendIds.Where(id => id != request.UserId).ToList();
 
-                if (friendIds.Count != 0)
+                if (friendIds.Count == 0)
+                    continue;
+
+                var profilesTask = _userProfileClient.GetUserProfilesAsync(friendIds, cancellationToken);
+                var photoTasks = friendIds.ToDictionary(
+                    id => id,
+                    id => _photoClient.GetMainPersonalPhotoAsync(id, cancellationToken));
+
+                var lastMessageTasks = friendIds.ToDictionary(
+                    id => id,
+                    id => _messageClient.GetLastMessageByChatIdAsync(chat.Id, cancellationToken));
+
+                await Task.WhenAll(profilesTask, Task.WhenAll(photoTasks.Values), Task.WhenAll(lastMessageTasks.Values));
+
+                var profiles = await profilesTask;
+                if (profiles == null || profiles.Count == 0)
+                    continue;
+
+                foreach (var friendId in friendIds)
                 {
-                    var profiles = await _userProfileClient.GetUserProfilesAsync(friendIds, cancellationToken);
+                    var profile = profiles.FirstOrDefault(p => p.Id == friendId);
+                    if (profile == null)
+                        continue;
 
-                    if (profiles != null && profiles.Count != 0)
+                    var profileImageUrl = await photoTasks[friendId];
+                    var lastMessage = await lastMessageTasks[friendId];
+
+                    var chatResponse = new ChatBySearchResponse
                     {
-                        foreach (var friendId in friendIds)
-                        {
-                            var profile = profiles.FirstOrDefault(p => p.Id == friendId);
+                        Id = chat.Id,
+                        UserId = request.UserId,
+                        CreatedAt = chat.CreatedAt,
+                        FriendIds = friendIds,
+                        FirstName = profile.FirstName,
+                        LastName = profile.LastName,
+                        PhotoUrl = profileImageUrl?.FilePath ?? string.Empty,
+                        LastMessage = lastMessage?.MessageText ?? string.Empty,
+                        UserName = $"{profile.FirstName} {profile.LastName}"
+                    };
 
-                            if (profile != null)
-                            {
-                                var profileImageUrl = await _photoClient.GetMainPersonalPhotoAsync(friendId, cancellationToken);
-                                var lastMessage = await _messageClient.GetLastMessageByChatIdAsync(chat.Id, cancellationToken);
-                                var chatBySearchResponse = new ChatBySearchResponse
-                                {
-                                    Id = chat.Id,
-                                    UserId = request.UserId,
-                                    CreatedAt = chat.CreatedAt,
-                                    FriendIds = friendIds,
-                                    FirstName = profile.FirstName,
-                                    LastName = profile.LastName,
-                                    PhotoUrl = profileImageUrl.FilePath,
-                                    LastMessage = lastMessage?.MessageText ?? string.Empty,
-                                    UserName = $"{profile.FirstName} {profile.LastName}" ?? string.Empty
-                                };
-
-                                chatBySearchResponses.Add(chatBySearchResponse);
-                            }
-                        }
-                    }
+                    responses.Add(chatResponse);
                 }
             }
-            return chatBySearchResponses;
+
+            return responses;
         }
     }
 }

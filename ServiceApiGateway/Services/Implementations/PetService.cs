@@ -87,7 +87,7 @@ namespace Service_ApiGateway.Services.Implementations
                 {
                     PetId = petId,
                     ProfileId = profileId,
-                    Pagination = new PaginationRequest() { Take = batchSize, Offset = offset }
+                    Options = new PaginationRequest() { Take = batchSize, Offset = offset }
                 };
 
                 var photos = await _petPhotoClient.BySearchAsync(request, cancellationToken);
