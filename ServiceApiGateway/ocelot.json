@@ -10,8 +10,7 @@
         }
       ],
       "UpstreamPathTemplate": "/chatHub/{everything}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
-      "UseWebSockets": true
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "CONNECT" ]
     },
     {
       "DownstreamPathTemplate": "/chatHub",
@@ -23,7 +22,7 @@
         }
       ],
       "UpstreamPathTemplate": "/chatHub",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "CONNECT" ],
       "UseWebSockets": true
     },
     {
