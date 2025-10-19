@@ -80,6 +80,7 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IPersonalPhotoService, PersonalPhotoService>();
 builder.Services.AddScoped<IPetPhotoService, PetPhotoService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPetCareService, PetCareService>();
 
 var app = builder.Build();
 

@@ -728,6 +728,10 @@
             "type": "string",
             "nullable": true
           },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
           "dateRecord": {
             "type": "string",
             "format": "date-time"

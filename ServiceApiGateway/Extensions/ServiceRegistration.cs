@@ -15,6 +15,7 @@
             services.AddServiceClient<PetSocialNetwork.ServicePhoto.IPetPhotoClient, PetSocialNetwork.ServicePhoto.PetPhotoClient>("PhotoService");
             services.AddServiceClient<PetSocialNetwork.ServiceFriend.IFriendShipClient, PetSocialNetwork.ServiceFriend.FriendShipClient>("FriendService");
             services.AddServiceClient<PetSocialNetwork.ServicePetPlanner.IPlannerClient, PetSocialNetwork.ServicePetPlanner.PlannerClient>("PlannerService");
+            services.AddServiceClient<PetSocialNetwork.ServicePetCare.IServiceClient, PetSocialNetwork.ServicePetCare.ServiceClient>("PetCareService");
 
 
             return services;
