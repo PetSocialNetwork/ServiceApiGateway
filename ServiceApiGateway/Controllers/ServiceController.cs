@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServicePetCare;
 using Service_ApiGateway.Services.Interfaces;
 
 namespace Service_ApiGateway.Controllers
 {
+    [ProfileCompletionFilter]
+    [Authorize]
+    [Route("api/[controller]")]
+    [ApiController]
     public class ServiceController : ControllerBase
     {
         private readonly IPetCareService _petCareService;
@@ -89,7 +94,7 @@ namespace Service_ApiGateway.Controllers
         /// Возвращает все типы услуг
         /// </summary>
         /// <param name="cancellationToken">Токен отмены</param>
-        [HttpPost("[action]")]
+        [HttpGet("[action]")]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
         public async Task<ICollection<ServiceTypeResponse>> GetServiceTypesAsync
