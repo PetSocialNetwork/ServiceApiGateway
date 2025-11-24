@@ -18,33 +18,21 @@ namespace Service_ApiGateway.Services.Implementations
           return await _serviceClient.AddServiceAsync(request, cancellationToken);
         }
 
-        public async Task<ServiceResponse> GetServiceByIdAsync
-            (Guid id, CancellationToken cancellationToken)
-        {
-           return await _serviceClient.GetServiceByIdAsync(id, cancellationToken);
-        }
-
         public async Task DeleteServiceAsync(Guid id, CancellationToken cancellationToken)
         {
             await _serviceClient.DeleteServiceAsync(id, cancellationToken);
         }
 
+        public async Task UpdateServiceAsync(UpdateServiceRequest request, CancellationToken cancellationToken)
+        {
+            await _serviceClient.UpdateServiceAsync(request, cancellationToken);
+        }
+
+
         public async Task<ICollection<ServiceResponse>> GetServiceByProfileIdAsync
             (Guid profileId, CancellationToken cancellationToken)
         {
            return await _serviceClient.GetServiceByProfileIdAsync(profileId, cancellationToken);
-        }
-
-        public async Task<ServiceTypeResponse> GetServiceTypeByIdAsync
-            (Guid id, CancellationToken cancellationToken)
-        {
-           return await _serviceClient.GetServiceTypeByIdAsync (id, cancellationToken);
-        }
-
-        public async Task<ICollection<ServiceTypeResponse>> GetServiceTypesAsync
-            (CancellationToken cancellationToken)
-        {
-            return await _serviceClient.GetServiceTypesAsync(cancellationToken);
         }
     }
 }

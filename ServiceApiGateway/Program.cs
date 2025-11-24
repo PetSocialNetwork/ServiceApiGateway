@@ -8,6 +8,7 @@ using Ocelot.Middleware;
 using Service_ApiGateway.Configurations;
 using Service_ApiGateway.Extensions;
 using Service_ApiGateway.Filters;
+using Service_ApiGateway.Services;
 using Service_ApiGateway.Services.Implementations;
 using Service_ApiGateway.Services.Interfaces;
 
@@ -30,6 +31,7 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add<CentralizedExceptionHandlingFilter>();
 });
+
 builder.Services.AddScoped<ProfileCompletionFilter>();
 
 builder.Services.AddClientServices();
@@ -81,6 +83,7 @@ builder.Services.AddScoped<IPersonalPhotoService, PersonalPhotoService>();
 builder.Services.AddScoped<IPetPhotoService, PetPhotoService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPetCareService, PetCareService>();
+builder.Services.AddScoped<ITypeService, TypeService>();
 
 var app = builder.Build();
 
