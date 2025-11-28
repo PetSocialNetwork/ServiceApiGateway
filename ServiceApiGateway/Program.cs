@@ -8,7 +8,6 @@ using Ocelot.Middleware;
 using Service_ApiGateway.Configurations;
 using Service_ApiGateway.Extensions;
 using Service_ApiGateway.Filters;
-using Service_ApiGateway.Services;
 using Service_ApiGateway.Services.Implementations;
 using Service_ApiGateway.Services.Interfaces;
 
@@ -84,6 +83,7 @@ builder.Services.AddScoped<IPetPhotoService, PetPhotoService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPetCareService, PetCareService>();
 builder.Services.AddScoped<ITypeService, TypeService>();
+builder.Services.AddScoped<IDogWalkingService, DogWalkingService>();
 
 var app = builder.Build();
 

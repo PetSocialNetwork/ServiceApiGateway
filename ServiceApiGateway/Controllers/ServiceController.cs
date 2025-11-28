@@ -5,8 +5,8 @@ using Service_ApiGateway.Services.Interfaces;
 
 namespace Service_ApiGateway.Controllers
 {
-    [ProfileCompletionFilter]
-    [Authorize]
+    //[ProfileCompletionFilter]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ServiceController : ControllerBase
@@ -33,7 +33,7 @@ namespace Service_ApiGateway.Controllers
         }
 
         /// <summary>
-        /// Удаляет услушу по его идентификатору
+        /// Удаляет услугу по его идентификатору
         /// </summary>
         /// <param name="id">Идентификатор услуги</param>
         /// <param name="cancellationToken">Токен отмены</param>
@@ -47,15 +47,29 @@ namespace Service_ApiGateway.Controllers
         }
 
         /// <summary>
+        /// Возвращает услуги по идентификатору 
+        /// </summary>
+        /// <param name="serviceId">Идентификатор услуги</param>
+        /// <param name="cancellationToken">Токен отмены</param>
+        [HttpGet("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<ServiceResponse> GetServiceByIdAsync
+            ([FromQuery] Guid serviceId, CancellationToken cancellationToken)
+        {
+            return await _petCareService.GetServiceByIdAsync(serviceId, cancellationToken);
+        }
+
+        /// <summary>
         /// Обновляет услугу
         /// </summary>
         /// <param name="request">Модель запроса</param>
         /// <param name="cancellationToken">Токен отмены</param>
-        [HttpDelete("[action]")]
+        [HttpPost("[action]")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task UpdatServiceAsync([FromBody] UpdateServiceRequest request, CancellationToken cancellationToken)
+        public async Task UpdateServiceAsync([FromBody] UpdateServiceRequest request, CancellationToken cancellationToken)
         {
             await _petCareService.UpdateServiceAsync(request, cancellationToken);
         }

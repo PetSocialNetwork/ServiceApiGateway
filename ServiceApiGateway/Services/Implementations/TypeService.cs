@@ -1,7 +1,7 @@
 ﻿using PetSocialNetwork.ServicePetCare;
 using Service_ApiGateway.Services.Interfaces;
 
-namespace Service_ApiGateway.Services
+namespace Service_ApiGateway.Services.Implementations
 {
     public class TypeService : ITypeService
     {

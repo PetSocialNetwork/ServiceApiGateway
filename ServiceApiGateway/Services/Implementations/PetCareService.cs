@@ -23,6 +23,11 @@ namespace Service_ApiGateway.Services.Implementations
             await _serviceClient.DeleteServiceAsync(id, cancellationToken);
         }
 
+        public async Task<ServiceResponse> GetServiceByIdAsync(Guid serviceId, CancellationToken cancellationToken)
+        {
+            return await _serviceClient.GetServiceByIdAsync(serviceId, cancellationToken);
+        }
+
         public async Task UpdateServiceAsync(UpdateServiceRequest request, CancellationToken cancellationToken)
         {
             await _serviceClient.UpdateServiceAsync(request, cancellationToken);

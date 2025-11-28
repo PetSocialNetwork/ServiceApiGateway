@@ -17,6 +17,7 @@
             services.AddServiceClient<PetSocialNetwork.ServicePetPlanner.IPlannerClient, PetSocialNetwork.ServicePetPlanner.PlannerClient>("PlannerService");
             services.AddServiceClient<PetSocialNetwork.ServicePetCare.IServiceClient, PetSocialNetwork.ServicePetCare.ServiceClient>("PetCareService");
             services.AddServiceClient<PetSocialNetwork.ServicePetCare.IServiceTypeClient, PetSocialNetwork.ServicePetCare.ServiceTypeClient>("PetCareService");
+            services.AddServiceClient<PetSocialNetwork.ServicePetCare.IDogWalkingServiceClient, PetSocialNetwork.ServicePetCare.DogWalkingServiceClient>("PetCareService");
 
             return services;
         }
