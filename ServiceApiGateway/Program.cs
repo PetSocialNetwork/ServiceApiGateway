@@ -84,6 +84,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPetCareService, PetCareService>();
 builder.Services.AddScoped<ITypeService, TypeService>();
 builder.Services.AddScoped<IDogWalkingService, DogWalkingService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 var app = builder.Build();
 
