@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServicePetCare;
 using Service_ApiGateway.Services.Interfaces;
 
@@ -41,9 +40,15 @@ namespace Service_ApiGateway.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task DeleteServiceAsync([FromQuery] Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteServiceAsync([FromQuery] Guid id, CancellationToken cancellationToken)
         {
-            await _petCareService.DeleteServiceAsync(id, cancellationToken);
+            var result = await _petCareService.DeleteServiceAsync(id, cancellationToken);
+            if (!result)
+            {
+                return BadRequest("Невозможно удалить услугу");
+            }
+
+            return Ok();
         }
 
         /// <summary>

@@ -54,9 +54,11 @@ namespace Service_ApiGateway.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
         public async Task UpdateSlotsAsync
-            ([FromBody] List<AddSlotRequest> request, CancellationToken cancellationToken)
+          ( [FromQuery] Guid serviceId,
+            [FromBody] List<AddSlotRequest> request,
+            CancellationToken cancellationToken)
         {
-            await _bookingService.UpdateSlotsAsync(request, cancellationToken);
+            await _bookingService.UpdateSlotsAsync(serviceId, request, cancellationToken);
         }
     }
 }

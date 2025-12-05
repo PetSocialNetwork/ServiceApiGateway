@@ -1,4 +1,5 @@
-﻿using PetSocialNetwork.ServicePetCare;
+﻿using PetSocialNetwork.ServiceBooking;
+using PetSocialNetwork.ServicePetCare;
 using Service_ApiGateway.Services.Interfaces;
 
 namespace Service_ApiGateway.Services.Implementations
@@ -6,10 +7,14 @@ namespace Service_ApiGateway.Services.Implementations
     public class PetCareService : IPetCareService
     {
         private readonly IServiceClient _serviceClient;
-        public PetCareService(IServiceClient serviceClient)
+        private readonly IBookingClient _bookingClient;
+        public PetCareService(IServiceClient serviceClient,
+            IBookingClient bookingClient)
         {
            _serviceClient = serviceClient
                 ?? throw new ArgumentException(nameof(serviceClient));
+            _bookingClient = bookingClient
+                ?? throw new ArgumentException(nameof(bookingClient));
         }
 
         public async Task<ServiceResponse> AddServiceAsync
@@ -18,9 +23,15 @@ namespace Service_ApiGateway.Services.Implementations
           return await _serviceClient.AddServiceAsync(request, cancellationToken);
         }
 
-        public async Task DeleteServiceAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<bool> DeleteServiceAsync(Guid id, CancellationToken cancellationToken)
         {
-            await _serviceClient.DeleteServiceAsync(id, cancellationToken);
+            if (!await _bookingClient.IsBusySlotsExistsAsync(id, cancellationToken))
+            {
+                await _serviceClient.DeleteServiceAsync(id, cancellationToken);
+                return true;
+            }
+
+            return false;
         }
 
         public async Task<ServiceResponse> GetServiceByIdAsync(Guid serviceId, CancellationToken cancellationToken)

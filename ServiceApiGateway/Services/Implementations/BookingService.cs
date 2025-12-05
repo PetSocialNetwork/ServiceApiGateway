@@ -27,9 +27,9 @@ namespace Service_ApiGateway.Services.Implementations
         }
 
         public async Task UpdateSlotsAsync
-            (List<AddSlotRequest> request, CancellationToken cancellationToken)
+            (Guid serviceId, List<AddSlotRequest> request, CancellationToken cancellationToken)
         {
-            await _bookingClient.UpdateSlotsAsync(request, cancellationToken);
+            await _bookingClient.UpdateSlotsAsync(serviceId, request, cancellationToken);
         }
     }
 }

@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "PetCareService",
+    "title": "BookingService",
     "version": "v1"
   },
   "paths": {
@@ -46,6 +46,48 @@
                   "items": {
                     "$ref": "#/components/schemas/SlotReponse"
                   }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/Booking/IsBusySlotsExists": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "parameters": [
+          {
+            "name": "serviceId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "boolean"
                 }
               }
             }
@@ -115,6 +157,16 @@
         "tags": [
           "Booking"
         ],
+        "parameters": [
+          {
+            "name": "serviceId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -177,10 +229,6 @@
       "AddSlotRequest": {
         "type": "object",
         "properties": {
-          "serviceId": {
-            "type": "string",
-            "format": "uuid"
-          },
           "slotDateTime": {
             "type": "string",
             "format": "date-time"
@@ -190,7 +238,8 @@
           },
           "createdAt": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false
