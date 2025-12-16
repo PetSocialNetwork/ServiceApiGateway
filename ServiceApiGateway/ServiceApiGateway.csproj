@@ -30,15 +30,15 @@
 	<ItemGroup>
 		<OpenApiReference Include="ApiDefs\BookingService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServiceBooking" ClassName="{controller}Client" />
 
+		<OpenApiReference Include="ApiDefs\AuthService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServiceAuth" ClassName="{controller}Client" />
+
+		<OpenApiReference Include="ApiDefs\PhotoService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter  /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServicePhoto" ClassName="{controller}Client" />
+
 		<OpenApiReference Include="ApiDefs\PetCareService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServicePetCare" ClassName="{controller}Client" />
 
 		<OpenApiReference Include="ApiDefs\ChatService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServiceChat" ClassName="{controller}Client" />
 
-		<OpenApiReference Include="ApiDefs\AuthService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServiceAuth" ClassName="{controller}Client" />
-
 		<OpenApiReference Include="ApiDefs\FriendService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServiceFriend" ClassName="{controller}Client" />
-
-		<OpenApiReference Include="ApiDefs\PhotoService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter  /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServicePhoto" ClassName="{controller}Client" />
 
 		<OpenApiReference Include="ApiDefs\UserService.json" Options="/OperationGenerationMode:MultipleClientsFromFirstTagAndPathSegments /GenerateClientInterfaces:true /GenerateExceptionClasses:false /ClientBaseClass:ApiClientBase /ExcludedTypeNames:BySearchQueryOptions,SearchByRule,FiltrationRuleSimple,OrderingRule,PaginationRule,ServiceErrorMessage,FileParameter /DateTimeType:System.DateTime /TimeType:System.TimeOnly /DateType:System.DateOnly" CodeGenerator="NSwagCSharp" Namespace="PetSocialNetwork.ServiceUser" ClassName="{controller}Client" />
 
@@ -57,9 +57,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Update="ocelot.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
+		<Content Update="ocelot.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 </Project>

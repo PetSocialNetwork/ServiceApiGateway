@@ -10,5 +10,11 @@ namespace Service_ApiGateway.Services.Interfaces
             (AddBookingRequest request, CancellationToken cancellationToken);
         Task UpdateSlotsAsync
             (Guid serviceId, List<AddSlotRequest> request, CancellationToken cancellationToken);
+        Task<IEnumerable<BookingResponse>> GetBookingsByServiceIdAsync
+            (Guid serviceId, CancellationToken cancellationToken);
+        Task<IEnumerable<BookingResponse>> GetBookingsProfileIdAsync
+            (Guid profileId, CancellationToken cancellationToken);
+        Task UpdateBookingStatusAsync
+           (UpdateBookingStatusRequest request, CancellationToken cancellationToken);
     }
 }

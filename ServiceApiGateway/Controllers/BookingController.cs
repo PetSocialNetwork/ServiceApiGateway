@@ -46,7 +46,52 @@ namespace Service_ApiGateway.Controllers
         }
 
         /// <summary>
-        /// Добавляет свобдные слоьы, удаляет ненужные 
+        /// Возвращает все бронирования по идентификатору услуги
+        /// </summary>
+        /// <param name="serviceId">Идентификатор услуги</param>
+        /// <param name="cancellationToken">Токен отмены</param>
+        [HttpGet("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<IEnumerable<BookingResponse>> GetBookingsByServiceIdAsync
+            ([FromQuery] Guid serviceId, CancellationToken cancellationToken)
+        {
+            return await _bookingService
+                .GetBookingsByServiceIdAsync(serviceId, cancellationToken);
+        }
+
+        /// <summary>
+        /// Возвращает все бронирования по идентификатору пользователя
+        /// </summary>
+        /// <param name="profileId">Идентификатор услуги</param>
+        /// <param name="cancellationToken">Токен отмены</param>
+        [HttpGet("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<IEnumerable<BookingResponse>> GetBookingsByProfileIdAsync
+            ([FromQuery] Guid profileId, CancellationToken cancellationToken)
+        {
+            return await _bookingService
+                .GetBookingsProfileIdAsync(profileId, cancellationToken);
+        }
+
+        /// <summary>
+        /// Обновляет статус бронирования
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
+        [HttpPost("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task UpdateBookingStatusAsync
+            ([FromBody] UpdateBookingStatusRequest request, CancellationToken cancellationToken)
+        {
+            await _bookingService.UpdateBookingStatusAsync
+                (request, cancellationToken);
+        }
+
+        /// <summary>
+        /// Добавляет свобдные слоты, удаляет ненужные 
         /// </summary>
         /// <param name="request">Модель запроса</param>
         /// <param name="cancellationToken">Токен отмены</param>

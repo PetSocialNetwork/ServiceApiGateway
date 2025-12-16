@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetSocialNetwork.ServicePetCare;
+using Service_ApiGateway.Models.Responses;
 using Service_ApiGateway.Services.Interfaces;
 
 namespace Service_ApiGateway.Controllers
@@ -87,7 +88,7 @@ namespace Service_ApiGateway.Controllers
         [HttpPost("[action]")]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public async Task<ICollection<ServiceResponse>> GetServiceByProfileIdAsync
+        public async Task<ICollection<ServiceWithPhotoResponse>> GetServiceByProfileIdAsync
             ([FromBody] Guid profileId, CancellationToken cancellationToken)
         {
             return await _petCareService.GetServiceByProfileIdAsync(profileId, cancellationToken);
