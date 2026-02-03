@@ -56,6 +56,31 @@
         }
       }
     },
+    "/api/Booking/DeleteSlotsByServiceId": {
+      "delete": {
+        "tags": [
+          "Booking"
+        ],
+        "parameters": [
+          {
+            "name": "serviceId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/Booking/IsBusySlotsExists": {
       "get": {
         "tags": [

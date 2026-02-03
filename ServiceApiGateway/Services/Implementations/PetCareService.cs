@@ -34,6 +34,7 @@ namespace Service_ApiGateway.Services.Implementations
             if (!await _bookingClient.IsBusySlotsExistsAsync(id, cancellationToken))
             {
                 await _serviceClient.DeleteServiceAsync(id, cancellationToken);
+                await _bookingClient.DeleteSlotsByServiceIdAsync(id, cancellationToken);
                 return true;
             }
 
