@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using PetSocialNetwork.ServiceAuth;
+﻿using PetSocialNetwork.ServiceAuth;
 using PetSocialNetwork.ServiceBooking;
 using PetSocialNetwork.ServiceNotification;
 using PetSocialNetwork.ServicePetCare;
@@ -97,6 +96,11 @@ namespace Service_ApiGateway.Services.Implementations
             (Guid serviceId, List<AddSlotRequest> request, CancellationToken cancellationToken)
         {
             await _bookingClient.UpdateSlotsAsync(serviceId, request, cancellationToken);
+        }
+
+        public async Task DeleteBookingAsync(Guid bookingId, CancellationToken cancellationToken)
+        {
+            await _bookingClient.DeleteBookingAsync(bookingId, cancellationToken);
         }
     }
 }

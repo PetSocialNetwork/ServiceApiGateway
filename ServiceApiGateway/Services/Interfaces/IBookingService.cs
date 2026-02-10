@@ -16,5 +16,7 @@ namespace Service_ApiGateway.Services.Interfaces
             (Guid profileId, CancellationToken cancellationToken);
         Task UpdateBookingStatusAsync
            (UpdateBookingStatusRequest request, CancellationToken cancellationToken);
+        Task DeleteBookingAsync
+           (Guid bookingId, CancellationToken cancellationToken);
     }
 }

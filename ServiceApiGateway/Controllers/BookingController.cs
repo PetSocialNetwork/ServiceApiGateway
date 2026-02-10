@@ -91,6 +91,21 @@ namespace Service_ApiGateway.Controllers
         }
 
         /// <summary>
+        /// Обновляет статус бронирования
+        /// </summary>
+        /// <param name="request">Модель запроса</param>
+        /// <param name="cancellationToken">Токен отмены</param>
+        [HttpDelete("[action]")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task DeleteBookingAsync
+            ([FromQuery] Guid bookingId, CancellationToken cancellationToken)
+        {
+            await _bookingService.DeleteBookingAsync
+                (bookingId, cancellationToken);
+        }
+
+        /// <summary>
         /// Добавляет свобдные слоты, удаляет ненужные 
         /// </summary>
         /// <param name="request">Модель запроса</param>
