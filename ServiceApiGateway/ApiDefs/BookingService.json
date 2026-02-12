@@ -465,6 +465,9 @@
             "type": "string",
             "format": "uuid"
           },
+          "slot": {
+            "$ref": "#/components/schemas/SlotReponse"
+          },
           "serviceId": {
             "type": "string",
             "format": "uuid"
